@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePlayerDto, UpdatePlayerDto, PlayerQueryDto } from './dto/player.dto';
-import { PlayerGender } from '@prisma/client';
+import { PlayerGender, Hand } from '@prisma/client';
 import { normalizeToMidnightGMT, parseAndNormalizeDate } from '../common/date.utils';
 
 type SeedCategory = 'senior' | 'normal' | 'infantiles';
@@ -25,6 +25,8 @@ export class PlayersService {
         lastName: dto.lastName,
         email: dto.email,
         gender: dto.gender,
+        documento: dto.documento,
+        mano: dto.mano,
         country: dto.country,
         birthDate: dto.birthDate ? parseAndNormalizeDate(dto.birthDate) : null,
       },
@@ -62,6 +64,8 @@ export class PlayersService {
       data: {
         firstName: dto.firstName,
         lastName: dto.lastName,
+        documento: dto.documento,
+        mano: dto.mano,
         country: dto.country,
         birthDate: dto.birthDate ? parseAndNormalizeDate(dto.birthDate) : undefined,
       },
@@ -104,6 +108,14 @@ export class PlayersService {
       'Vilas', 'Nastase', 'Navratilova', 'Nalbandian', 'Sabatini'
     ];
     const countries = ['Argentina', 'Spain', 'USA', 'France', 'Brazil', 'Italy'];
+    const handValues = [Hand.DIESTRO, Hand.ZURDO];
+
+    function randomDocumento(): string {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const letter = letters.charAt(Math.floor(Math.random() * letters.length));
+      const number = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+      return `${letter}${letter}-${number}`;
+    }
 
     const ageRanges: Record<SeedCategory, { min: number; max: number }> = {
       infantiles: { min: 8, max: 14 },
@@ -133,6 +145,8 @@ export class PlayersService {
           lastName,
           email,
           gender,
+          documento: randomDocumento(),
+          mano: handValues[i % 2],
           country: countries[i % countries.length],
           birthDate: randomBirthDate(minAge, maxAge),
         },

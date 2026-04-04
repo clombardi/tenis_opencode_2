@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsEnum, IsOptional, IsDateString } from 'class-validator';
-import { PlayerGender } from '@prisma/client';
+import { PlayerGender, Hand } from '@prisma/client';
 
 export class CreatePlayerDto {
   @IsString()
@@ -13,6 +13,14 @@ export class CreatePlayerDto {
 
   @IsEnum(PlayerGender)
   gender!: PlayerGender;
+
+  @IsOptional()
+  @IsString()
+  documento?: string;
+
+  @IsOptional()
+  @IsEnum(Hand)
+  mano?: Hand;
 
   @IsOptional()
   @IsString()
@@ -31,6 +39,14 @@ export class UpdatePlayerDto {
   @IsOptional()
   @IsString()
   lastName?: string;
+
+  @IsOptional()
+  @IsString()
+  documento?: string;
+
+  @IsOptional()
+  @IsEnum(Hand)
+  mano?: Hand;
 
   @IsOptional()
   @IsString()

@@ -1,0 +1,525 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    height: 620px;
+    font-family: 'Barlow', sans-serif;
+    background: #E3F2FD;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    border: 0.5px solid var(--color-border-tertiary);
+  }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 20px;
+    height: 52px;
+    background: #1565C0;
+    flex-shrink: 0;
+  }
+  .topbar-logo {
+    width: 28px; height: 28px;
+    background: #82B1FF;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .topbar-logo svg { width: 16px; height: 16px; }
+  .topbar-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #E3F2FD;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .topbar-sub {
+    font-size: 12px;
+    color: #90CAF9;
+    margin-left: 4px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+  .topbar-spacer { flex: 1; }
+  .topbar-user {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .topbar-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #1976D2;
+    border: 1.5px solid #90CAF9;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: #E3F2FD;
+  }
+
+  /* BODY LAYOUT */
+  .body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: #1E88E5;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+  }
+  .sidebar-section-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: #90CAF9;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 0 16px 6px;
+    margin-top: 10px;
+  }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 16px;
+    cursor: pointer;
+    color: #BBDEFB;
+    font-size: 13px;
+    font-weight: 400;
+    border-left: 3px solid transparent;
+    transition: background 0.15s;
+  }
+  .sidebar-item:hover { background: rgba(255,255,255,0.08); }
+  .sidebar-item.active {
+    background: rgba(255,255,255,0.15);
+    border-left-color: #82B1FF;
+    color: #E3F2FD;
+    font-weight: 500;
+  }
+  .sidebar-icon {
+    width: 16px; height: 16px; flex-shrink: 0;
+    opacity: 0.85;
+  }
+  .sidebar-item.active .sidebar-icon { opacity: 1; }
+
+  /* MAIN CONTENT */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    background: #E3F2FD;
+  }
+
+  .main-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .main-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #0D47A1;
+    letter-spacing: 0.3px;
+  }
+  .main-subtitle {
+    font-size: 12px;
+    color: #1565C0;
+    margin-top: 2px;
+    font-weight: 400;
+  }
+  .btn-primary {
+    display: flex; align-items: center; gap: 6px;
+    background: #1565C0;
+    color: #E3F2FD;
+    border: none;
+    border-radius: var(--border-radius-md);
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Barlow', sans-serif;
+    letter-spacing: 0.3px;
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .search-wrap {
+    display: flex; align-items: center;
+    background: #BBDEFB;
+    border: 0.5px solid #90CAF9;
+    border-radius: var(--border-radius-md);
+    padding: 6px 10px;
+    gap: 6px;
+    flex: 1; max-width: 260px;
+  }
+  .search-wrap input {
+    border: none; background: transparent;
+    font-size: 12px; color: #0D47A1;
+    outline: none; width: 100%;
+    font-family: 'Barlow', sans-serif;
+  }
+  .search-wrap input::placeholder { color: #64B5F6; }
+  .filter-chip {
+    display: flex; align-items: center; gap: 5px;
+    background: #BBDEFB;
+    border: 0.5px solid #90CAF9;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px; color: #1565C0;
+    cursor: pointer;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+  }
+  .filter-chip.on { background: #1565C0; color: #E3F2FD; border-color: #1565C0; }
+  .count-badge {
+    margin-left: auto;
+    font-size: 11px; color: #1565C0;
+    background: #BBDEFB;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-weight: 500;
+    border: 0.5px solid #90CAF9;
+  }
+
+  /* TABLE */
+  .table-wrap {
+    background: #FAFBFF;
+    border-radius: var(--border-radius-lg);
+    border: 0.5px solid #90CAF9;
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    table-layout: fixed;
+  }
+  thead tr {
+    background: #1565C0;
+  }
+  thead th {
+    padding: 10px 10px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    color: #BBDEFB;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-right: 0.5px solid rgba(255,255,255,0.08);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  thead th:last-child { border-right: none; }
+
+  tbody tr {
+    border-bottom: 0.5px solid #BBDEFB;
+    transition: background 0.1s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #E3F2FD; }
+
+  td {
+    padding: 9px 10px;
+    color: #0D47A1;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .player-cell {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .player-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #1565C0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: #E3F2FD;
+    flex-shrink: 0;
+  }
+  .player-name { font-weight: 500; color: #0D47A1; font-size: 12px; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .badge-m { background: #BBDEFB; color: #0D47A1; }
+  .badge-f { background: #FCE4EC; color: #880E4F; }
+  .badge-diestro { background: #E8F5E9; color: #1B5E20; }
+  .badge-zurdo   { background: #FFF3E0; color: #E65100; }
+
+  .rank-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1565C0;
+  }
+  .rank-top { color: #0D47A1; }
+
+  .flag { font-size: 14px; }
+
+  .col-nombre  { width: 18%; }
+  .col-doc     { width: 11%; }
+  .col-nacim   { width: 10%; }
+  .col-nac     { width: 10%; }
+  .col-mano    { width: 9%; }
+  .col-genero  { width: 8%; }
+  .col-rank    { width: 8%; }
+  .col-acc     { width: 8%; }
+
+  .action-btn {
+    background: none; border: 0.5px solid #90CAF9;
+    border-radius: var(--border-radius-md);
+    padding: 3px 8px; font-size: 10px; color: #1565C0;
+    cursor: pointer; font-family: 'Barlow', sans-serif;
+  }
+  .action-btn:hover { background: #BBDEFB; }
+</style>
+
+<div class="app-shell">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="6.5" stroke="#1565C0" stroke-width="1.2"/>
+        <path d="M2 8 Q5 5.5 8 8 Q11 10.5 14 8" stroke="#1565C0" stroke-width="1.2" fill="none"/>
+        <path d="M8 2 Q10.5 5 8 8 Q5.5 11 8 14" stroke="#1565C0" stroke-width="1.2" fill="none"/>
+      </svg>
+    </div>
+    <span class="topbar-title">TourneyPro</span>
+    <span class="topbar-sub">· Gestión de torneos de tenis</span>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-user">
+      <span style="font-size:12px;color:#90CAF9;">Admin</span>
+      <div class="topbar-avatar">AD</div>
+    </div>
+  </header>
+
+  <div class="body">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <span class="sidebar-section-label">Principal</span>
+
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="1" width="6" height="6" rx="1" fill="#BBDEFB"/>
+          <rect x="9" y="1" width="6" height="6" rx="1" fill="#BBDEFB"/>
+          <rect x="1" y="9" width="6" height="6" rx="1" fill="#BBDEFB"/>
+          <rect x="9" y="9" width="6" height="6" rx="1" fill="#BBDEFB"/>
+        </svg>
+        Panel general
+      </div>
+
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="5.5" stroke="#BBDEFB" stroke-width="1.3"/>
+          <path d="M2.5 8 Q5 6 8 8 Q11 10 13.5 8" stroke="#BBDEFB" stroke-width="1.3" fill="none"/>
+          <path d="M8 2.5 Q10 5 8 8 Q6 11 8 13.5" stroke="#BBDEFB" stroke-width="1.3" fill="none"/>
+        </svg>
+        Torneos
+      </div>
+
+      <span class="sidebar-section-label">Gestión</span>
+
+      <div class="sidebar-item active">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="6" cy="5" r="2.8" stroke="#E3F2FD" stroke-width="1.3"/>
+          <path d="M1 13.5c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="#E3F2FD" stroke-width="1.3" fill="none"/>
+          <circle cx="12" cy="5" r="2" stroke="#90CAF9" stroke-width="1.1"/>
+          <path d="M14 13.5c0-1.9-1.1-3.5-2.5-4" stroke="#90CAF9" stroke-width="1.1" fill="none"/>
+        </svg>
+        Jugadores
+      </div>
+
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+          <rect x="1.5" y="3" width="13" height="10" rx="1.5" stroke="#BBDEFB" stroke-width="1.2"/>
+          <path d="M4 7h8M4 10h5" stroke="#BBDEFB" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Inscripciones
+      </div>
+
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+          <path d="M3 13V8m3 5V5m3 8V3m3 10V7" stroke="#BBDEFB" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        Clasificaciones
+      </div>
+
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+          <rect x="2" y="2" width="12" height="12" rx="1.5" stroke="#BBDEFB" stroke-width="1.2"/>
+          <path d="M5 2v3M11 2v3M2 7h12" stroke="#BBDEFB" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Calendario
+      </div>
+
+      <span class="sidebar-section-label">Sistema</span>
+
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="2.5" stroke="#BBDEFB" stroke-width="1.2"/>
+          <path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M11 3.6l-1.4 1.4M4.6 11L3.2 12.4" stroke="#BBDEFB" stroke-width="1.1" stroke-linecap="round"/>
+        </svg>
+        Configuración
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="main-header">
+        <div>
+          <div class="main-title">Jugadores</div>
+          <div class="main-subtitle">Gestión de jugadores registrados en el sistema</div>
+        </div>
+        <button class="btn-primary">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 1v10M1 6h10" stroke="#E3F2FD" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Nuevo jugador
+        </button>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <circle cx="5.5" cy="5.5" r="4" stroke="#64B5F6" stroke-width="1.2"/>
+            <path d="M8.5 8.5l3 3" stroke="#64B5F6" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" placeholder="Buscar jugador...">
+        </div>
+        <div class="filter-chip on">Todos</div>
+        <div class="filter-chip">Masculino</div>
+        <div class="filter-chip">Femenino</div>
+        <div class="filter-chip">Top 100</div>
+        <div class="count-badge">8 jugadores</div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-nombre">Nombre y apellido</th>
+              <th class="col-doc">Documento</th>
+              <th class="col-nacim">Fecha nac.</th>
+              <th class="col-nac">Nacionalidad</th>
+              <th class="col-mano">Mano hábil</th>
+              <th class="col-genero">Género</th>
+              <th class="col-rank">Ranking</th>
+              <th class="col-acc">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">ND</div><span class="player-name">Novak Djokovic</span></div></td>
+              <td>SRB-19870522</td>
+              <td>22/05/1987</td>
+              <td><span class="flag">🇷🇸</span> Serbia</td>
+              <td><span class="badge badge-diestro">Diestro</span></td>
+              <td><span class="badge badge-m">Masc.</span></td>
+              <td><span class="rank-num rank-top">#1</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">CA</div><span class="player-name">Carlos Alcaraz</span></div></td>
+              <td>ESP-20030505</td>
+              <td>05/05/2003</td>
+              <td><span class="flag">🇪🇸</span> España</td>
+              <td><span class="badge badge-diestro">Diestro</span></td>
+              <td><span class="badge badge-m">Masc.</span></td>
+              <td><span class="rank-num rank-top">#2</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">JS</div><span class="player-name">Jannik Sinner</span></div></td>
+              <td>ITA-20010816</td>
+              <td>16/08/2001</td>
+              <td><span class="flag">🇮🇹</span> Italia</td>
+              <td><span class="badge badge-diestro">Diestro</span></td>
+              <td><span class="badge badge-m">Masc.</span></td>
+              <td><span class="rank-num">#3</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">IG</div><span class="player-name">Iga Świątek</span></div></td>
+              <td>POL-20010531</td>
+              <td>31/05/2001</td>
+              <td><span class="flag">🇵🇱</span> Polonia</td>
+              <td><span class="badge badge-diestro">Diestro</span></td>
+              <td><span class="badge badge-f">Fem.</span></td>
+              <td><span class="rank-num rank-top">#1</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">AS</div><span class="player-name">Alexander Sinner</span></div></td>
+              <td>GER-19971008</td>
+              <td>08/10/1997</td>
+              <td><span class="flag">🇩🇪</span> Alemania</td>
+              <td><span class="badge badge-diestro">Diestro</span></td>
+              <td><span class="badge badge-m">Masc.</span></td>
+              <td><span class="rank-num">#5</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">RG</div><span class="player-name">Rafael García</span></div></td>
+              <td>ARG-19990312</td>
+              <td>12/03/1999</td>
+              <td><span class="flag">🇦🇷</span> Argentina</td>
+              <td><span class="badge badge-zurdo">Zurdo</span></td>
+              <td><span class="badge badge-m">Masc.</span></td>
+              <td><span class="rank-num">#18</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">AL</div><span class="player-name">Aryna Lopéz</span></div></td>
+              <td>BLR-20000907</td>
+              <td>07/09/2000</td>
+              <td><span class="flag">🇧🇾</span> Bielorrusia</td>
+              <td><span class="badge badge-diestro">Diestro</span></td>
+              <td><span class="badge badge-f">Fem.</span></td>
+              <td><span class="rank-num">#4</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+            <tr>
+              <td><div class="player-cell"><div class="player-avatar">LM</div><span class="player-name">Lorenzo Musetti</span></div></td>
+              <td>ITA-20020303</td>
+              <td>03/03/2002</td>
+              <td><span class="flag">🇮🇹</span> Italia</td>
+              <td><span class="badge badge-zurdo">Zurdo</span></td>
+              <td><span class="badge badge-m">Masc.</span></td>
+              <td><span class="rank-num">#24</span></td>
+              <td><button class="action-btn">Editar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding:0 2px;">
+        <span style="font-size:11px;color:#1565C0;">Mostrando 1–8 de 8 jugadores</span>
+        <div style="display:flex;gap:6px;">
+          <button class="action-btn" style="opacity:0.45;cursor:default;">← Anterior</button>
+          <button class="action-btn" style="background:#BBDEFB;">1</button>
+          <button class="action-btn" style="opacity:0.45;cursor:default;">Siguiente →</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>

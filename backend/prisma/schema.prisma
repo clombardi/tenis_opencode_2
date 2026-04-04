@@ -121,6 +121,11 @@ enum PlayerGender {
   FEMALE
 }
 
+enum Hand {
+  DIESTRO
+  ZURDO
+}
+
 enum RegistrationRole {
   PLAYER
   PARTNER
@@ -143,6 +148,9 @@ model Player {
   lastName        String
   email           String       @unique
   gender          PlayerGender
+
+  documento       String?
+  mano            Hand?
 
   country         String?
   birthDate       DateTime?
