@@ -176,3 +176,15 @@ Prompt 16
 -------------------------------------------
 Veo que en frontend/src/theme.ts definiste tonos usando RGB en lugar de las constantes p.ej. blue[800]. Te pido por favor que reemplaces todos los valores RGB que hayas puesto en el código por constantes como la indicada, y agregues una sección en AGENTS.md llamada "Reglas de codificación" donde se indique que siempre se deben usar estas constantes en lugar de valores RGB u otras especificaciones de colores. ¡Gracias!
 
+
+-------------------------------------------
+Prompt 17
+-------------------------------------------
+Veo que tal vez haya archivos generados por la creación inicial del proyecto FE que realiza Vite, que tal vez ya no se usen, p.ej. frontend/src/assets/vite.svg. Te pido que borres todos los archivos incorporados al crear inicialmente el proyecto FE que forman parte de la página que arma Vite pero que no son relevantes para este proyecto. ¡Gracias!
+
+
+-------------------------------------------
+Prompt 18
+-------------------------------------------
+
+
