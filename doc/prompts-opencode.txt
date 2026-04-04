@@ -1,0 +1,78 @@
+-------------------------------------------
+Prompt 1
+-------------------------------------------
+Necesito que te comportes como un Leader Técnico con una amplia experiencia en desarrollo en Node.js y con mucha experiencia en análisis de sistemas. Esto es crucial para ir trabajando en cada tarea que te solicite.
+Para empezar, te pido que generes un plan de implementación del backend para una aplicación Web que responda al enunciado en doc/enunciado.md, indicando las etapas en las que considerás que debería organizarse esta implementación. También te pido que propongas un stack de tecnologías a utilizar, en un entorno Typescript.
+Para esta implementación vamos a usar la carpeta backend.
+
+¡Gracias!
+
+Pruebo con MiniMax M2.5.
+
+Me generó un lindo PLAN.md, que está en /backend, lo copié como PLAN_001.md.
+En ese .md se propone un modelo de datos que intuitivamente parece correcto. Siguiente experimento acá: hacer lo mismo con el enunciado intermedio de seguimiento académico. Se puede arrancar con pedirle un esquema de BD.
+
+El plan también se ve correcto. Peeeero choca con mi gusto por un desarrollo incremental donde se van construyendo funcionalidades parciales que se puedan comprobar en forma lo más independiente posible.
+
+
+-------------------------------------------
+Otro aspecto a entender
+-------------------------------------------
+Qué .md de contexto se le puede suministrar, y qué ventajas conlleva la incorporación de estos archivos.
+
+
+
+-------------------------------------------
+Prompt 2
+-------------------------------------------
+El modelo de datos se ve correcto. El stack tecnológico también. 
+Respecto de las etapas, no logro entender cómo se puede verificar el correcto funcionamiento de la gestión de torneos y el motor de cuadros, si la gestión de inscripciones está prevista para una etapa posterior. Te pido que generes una variante del plan que tenga en cuenta la comprobación de lo producido en cada etapa. ¡Gracias!
+
+Tardó 1 minuto, generó la versión que copio como PLAN_002.
+
+Qué me pasa: como me plantea un plan que contempla *todo* el desarrollo, me lleva a hacer una revisión completa de la lógica de negocio antes de arrancar. Se choca con la idea de desarrollo iterativo.
+En concreto: me di cuenta que en rigor los dobles y dobles mixtos llevan rankings separados. Pero en un desarrollo real prefiero ir paso a paso, y pelearme con eso cuando sea el momento.
+En un dominio como el del tenis, puedo hacer una evaluación completa antes de arrancar. En cuanto el dominio se pone más complejo, o en desarrollos experimentales donde algunos requerimientos se van descubriendo, creo que no es una forma conveniente de encarar un proyecto.
+
+
+-------------------------------------------
+Prompt 3
+-------------------------------------------
+Aunque el plan es en términos generales correcto, veo algunos aspectos a ajustar. Además, preferiría adoptar un enfoque más incremental, en el que no resulte necesario armar un plan completo a detalle antes de empezar el desarrollo.
+Por eso te pido que armes un plan parcial, que teniendo en cuenta la visión general, permita poner el foco en algunos aspectos particulares.
+
+Te pido que armes un plan para una primera fase que contemple sólo la gestión de torneos y la gestión de inscripciones y modalidades. En particular, vamos a dejar para más adelante la autenticación y autorización, y en general el modelo de usuarios. 
+
+Incluí únicamente el diseño de BD necesario para resolver estos requerimientos.
+
+Te pido que generes el plan en un archivo separado al del plan general, para que en el trabajo posterior se puedan tener ambos planes, el general y el específico de la fase, como referencia.
+
+¡Gracias!
+
+
+-------------------------------------------
+Prompt 4
+-------------------------------------------
+La forma en la que proponés modelar la relación entre partidos y jugadores me resulta enrevesada. Pensando en una BD relacional, prefiero que haya una relación N-M entre jugadores y partidos, donde el rol del jugador en el partido (player1 / player2 / partner1 / partner2) sea un atributo de la relación. De esta forma, en el modelo Player tendríamos una única lista matches que podría ser una lista de PlayerInMatch, el modelo asociado a la tabla de relación. Se podría proceder en forma análoga con las registraciones.
+Por otro lado, quiero hacer un corte después de la etapa 1.5, esto ya representa un entregable parcial que un usuario puede empezar a probar. Por esto te pido que agregues otra etapa luego de la 1.5, en la que se realice el testing e integración hasta ese punto. El plan resultante tendrá dos etapas de testing e integración, una luego de 1.5, la otra al final como indicado en el plan actual.
+Finalmente, te pido considerar un estado adicional para los torneos, luego de REGISTRATION, llamado ORGANIZING. Hay que considerar un endpoint específico para cerrar la registración a un torneo, que lo pasa de REGISTRATION a ORGANIZING. Se puede generar el cuadro de un torneo sólo si está en estado ORGANIZING. Luego por otro endpoint específico, el torneo pasa de ORGANIZING a IN_PROGRESS. Por qué esto: porque en iteraciones futuras se prevé que la organización pueda modificar el cuadro de un torneo, cambiando la hora de inicio y/o los jugadores/parejas de los partidos de la primera ronda. Esto *no lo contemples* por el momento, formará parte de una fase posterior del desarrollo. Ahora incluí *únicamente* el nuevo estado y los endpoints para la transición de estado.
+
+Por favor generá una nueva versión del plan para la fase 1 que tenga en cuenta estos comentarios. ¡Gracias!
+
+
+(lo ejecuté en modo plan, no cambió el archivo, pasé a modo build y le puse esto)
+Por favor aplicá los cambios propuestos al archivo PLAN_FASE1.md. No generes ningún archivo que forme parte del desarrollo. ¡Gracias!
+
+
+-------------------------------------------
+Prompt 5
+-------------------------------------------
+Antes de empezar, te pido que crees el archivo AGENTS.md.
+En este archivo, precisá que vamos a trabajar con el FE y el BE como dos proyectos separados, en las carpetas /backend y /frontend respectivamente; incluí las tecnologías elegidas para el backend, y describí el modelo de datos tomándolo de la versión actual de PLAN_FASE1.md. ¡Gracias!
+
+
+-------------------------------------------
+Prompt 6
+-------------------------------------------
+Ahora sí, te pido que procedas con la etapa 1.1 tal como está descripta en /backend/PLAN_FASE1.md.
+(este tardó unos 5 minutos)

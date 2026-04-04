@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TournamentCategory {
+  id              String       @id @default(uuid())
+  name            String
+  code            String       @unique
+  pointsWinner    Int
+  pointsFinalist  Int
+  tier            Int
+
+  tournaments     Tournament[]
+}
+
+enum GenderCategory {
+  MASCULINE
+  FEMININE
+  MIXED
+}
+
+enum TournamentMode {
+  SINGLES
+  DOUBLES
+  MIXED_DOBLES
+}
+
+enum TournamentStatus {
+  DRAFT
+  REGISTRATION
+  ORGANIZING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Tournament {
+  id              String           @id @default(uuid())
+  name            String
+  categoryId      String
+  category        TournamentCategory @relation(fields: [categoryId], references: [id])
+  genderCategory  GenderCategory
+  mode            TournamentMode
+  drawSize        Int
+
+  startDate       DateTime
+  endDate         DateTime
+
+  status          TournamentStatus @default(DRAFT)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  rounds          TournamentRound[]
+  registrations   Registration[]
+}
+
+model TournamentRound {
+  id              String       @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  roundNumber     Int
+  roundType       String
+
+  matches         Match[]
+
+  @@unique([tournamentId, roundNumber])
+}
+
+enum MatchStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  RETIRED
+  WALKOVER
+}
+
+enum PlayerMatchRole {
+  PLAYER1
+  PLAYER2
+  PARTNER1
+  PARTNER2
+}
+
+model PlayerInMatch {
+  id        String       @id @default(uuid())
+  matchId   String
+  match     Match        @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player       @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  role      PlayerMatchRole
+
+  @@unique([matchId, playerId])
+}
+
+model Match {
+  id              String       @id @default(uuid())
+  roundId         String
+  round           TournamentRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  winnerId        String?
+  status          MatchStatus  @default(SCHEDULED)
+
+  score           String?
+
+  startTime       DateTime?
+  endTime         DateTime?
+
+  nextMatchId     String?
+  nextMatchSlot   Int?
+
+  participants    PlayerInMatch[]
+}
+
+enum PlayerGender {
+  MALE
+  FEMALE
+}
+
+enum RegistrationRole {
+  PLAYER
+  PARTNER
+}
+
+model PlayerInRegistration {
+  id              String       @id @default(uuid())
+  registrationId  String
+  registration    Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  playerId        String
+  player          Player       @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  role            RegistrationRole
+
+  @@unique([registrationId, playerId])
+}
+
+model Player {
+  id              String       @id @default(uuid())
+  firstName       String
+  lastName        String
+  email           String       @unique
+  gender          PlayerGender
+
+  country         String?
+  birthDate       DateTime?
+
+  registrations   PlayerInRegistration[]
+  matches         PlayerInMatch[]
+}
+
+model Registration {
+  id              String       @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament   @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  registeredAt    DateTime     @default(now())
+
+  participants    PlayerInRegistration[]
+
+  @@unique([tournamentId])
+}
