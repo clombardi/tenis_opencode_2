@@ -186,5 +186,6 @@ Veo que tal vez haya archivos generados por la creación inicial del proyecto FE
 -------------------------------------------
 Prompt 18
 -------------------------------------------
-
+Perfecto, ahora procedé con el resto del plan en PLAN_FE_ETAPA1_2, ¡gracias!
+(2m 10s)
 

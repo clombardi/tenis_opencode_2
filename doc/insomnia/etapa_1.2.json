@@ -1,12 +1,12 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2026-04-04T18:30:00.000Z",
+  "__export_date": "2026-04-04T21:50:00.000Z",
   "__export_source": "insomnia.desktop.app:v11.2.0",
   "resources": [
     {
       "_id": "wrk_tenis_api",
-      "name": "Tenis API - Etapa 1.2",
+      "name": "Tenis API - Etapa 1.2 (v2)",
       "_type": "workspace",
       "parentId": null,
       "metaSortKey": 1,
@@ -38,7 +38,7 @@
       "url": "{{BASE_URL}}/players",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Perez\",\n  \"email\": \"juan.perez@example.com\",\n  \"gender\": \"MALE\",\n  \"country\": \"Argentina\"\n}"
+        "text": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Perez\",\n  \"email\": \"juan.perez@example.com\",\n  \"gender\": \"MALE\",\n  \"documento\": \"AA-12345678\",\n  \"mano\": \"DIESTRO\",\n  \"country\": \"Argentina\",\n  \"birthDate\": \"2000-05-15\"\n}"
       },
       "headers": [
         {
@@ -94,7 +94,7 @@
       "url": "{{BASE_URL}}/players/:id",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"country\": \"Spain\"\n}"
+        "text": "{\n  \"documento\": \"BB-87654321\",\n  \"mano\": \"ZURDO\",\n  \"country\": \"Spain\"\n}"
       },
       "headers": [
         {
@@ -123,7 +123,7 @@
       "name": "Seed Players",
       "parentId": "fld_players",
       "method": "POST",
-      "url": "{{BASE_URL}}/seed/players",
+      "url": "{{BASE_URL}}/seed/players?count=32&category=normal",
       "body": {},
       "headers": [],
       "authentication": {},
