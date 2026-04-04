@@ -1,0 +1,134 @@
+{
+	"_type": "export",
+	"__export_format": 4,
+	"__export_date": "2026-04-04T18:30:00.000Z",
+	"__export_source": "insomnia.desktop.app:v11.2.0",
+	"resources": [
+		{
+			"_id": "wrk_tenis_api",
+			"name": "Tenis API - Etapa 1.2",
+			"_type": "workspace",
+			"parentId": null,
+			"metaSortKey": 1,
+			"scope": "collection"
+		},
+		{
+			"_id": "env_base",
+			"name": "Base Environment",
+			"data": {
+				"BASE_URL": "http://localhost:3000"
+			},
+			"isPrivate": false,
+			"_type": "environment",
+			"parentId": "wrk_tenis_api",
+			"metaSortKey": 1
+		},
+		{
+			"_id": "fld_players",
+			"name": "Players",
+			"parentId": "wrk_tenis_api",
+			"_type": "request_group",
+			"metaSortKey": 1
+		},
+		{
+			"_id": "req_create_player",
+			"name": "Create Player",
+			"parentId": "fld_players",
+			"method": "POST",
+			"url": "{{BASE_URL}}/players",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Perez\",\n  \"email\": \"juan.perez@example.com\",\n  \"gender\": \"MALE\",\n  \"country\": \"Argentina\"\n}"
+			},
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"_type": "request",
+			"metaSortKey": 1
+		},
+		{
+			"_id": "req_list_players",
+			"name": "List Players",
+			"parentId": "fld_players",
+			"method": "GET",
+			"url": "{{BASE_URL}}/players",
+			"body": {},
+			"headers": [],
+			"authentication": {},
+			"_type": "request",
+			"metaSortKey": 2
+		},
+		{
+			"_id": "req_list_players_male",
+			"name": "List Players (MALE)",
+			"parentId": "fld_players",
+			"method": "GET",
+			"url": "{{BASE_URL}}/players?gender=MALE",
+			"body": {},
+			"headers": [],
+			"authentication": {},
+			"_type": "request",
+			"metaSortKey": 3
+		},
+		{
+			"_id": "req_get_player",
+			"name": "Get Player",
+			"parentId": "fld_players",
+			"method": "GET",
+			"url": "{{BASE_URL}}/players/:id",
+			"body": {},
+			"headers": [],
+			"authentication": {},
+			"_type": "request",
+			"metaSortKey": 4
+		},
+		{
+			"_id": "req_update_player",
+			"name": "Update Player",
+			"parentId": "fld_players",
+			"method": "PUT",
+			"url": "{{BASE_URL}}/players/:id",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"country\": \"Spain\"\n}"
+			},
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"_type": "request",
+			"metaSortKey": 5
+		},
+		{
+			"_id": "req_delete_player",
+			"name": "Delete Player",
+			"parentId": "fld_players",
+			"method": "DELETE",
+			"url": "{{BASE_URL}}/players/:id",
+			"body": {},
+			"headers": [],
+			"authentication": {},
+			"_type": "request",
+			"metaSortKey": 6
+		},
+		{
+			"_id": "req_seed_players",
+			"name": "Seed Players",
+			"parentId": "fld_players",
+			"method": "POST",
+			"url": "{{BASE_URL}}/seed/players",
+			"body": {},
+			"headers": [],
+			"authentication": {},
+			"_type": "request",
+			"metaSortKey": 7
+		}
+	]
+}

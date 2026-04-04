@@ -1,4 +1,66 @@
-# AGENTS.md - Configuración del Proyecto
+# AGENTS.md
+
+## Procedimientos
+
+Toda tarea que agregue, modifique o elimine endpoints que publica el backend debe mantener actualizado el archivo `ENDPOINTS.md`, describiendo todos los endpoints agrupados por entidad.
+
+## Generacion de archivos para Insomnia
+
+Al generar archivos JSON de colecciones de Insomnia, usar formato v4 con la siguiente estructura:
+
+```json
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "YYYY-MM-DDTHH:MM:SS.000Z",
+  "__export_source": "insomnia.desktop.app:v11.2.0",
+  "resources": [
+    {
+      "_id": "wrk_xxx",
+      "name": "Workspace Name",
+      "_type": "workspace",
+      "parentId": null,
+      "metaSortKey": 1,
+      "scope": "collection"
+    },
+    {
+      "_id": "env_xxx",
+      "name": "Base Environment",
+      "data": { "BASE_URL": "http://localhost:3000" },
+      "isPrivate": false,
+      "_type": "environment",
+      "parentId": "wrk_xxx",
+      "metaSortKey": 1
+    },
+    {
+      "_id": "fld_xxx",
+      "name": "Folder Name",
+      "parentId": "wrk_xxx",
+      "_type": "request_group",
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_xxx",
+      "name": "Request Name",
+      "parentId": "fld_xxx",
+      "method": "GET|POST|PUT|DELETE|PATCH",
+      "url": "{{BASE_URL}}/endpoint",
+      "body": { "mimeType": "application/json", "text": "{}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "authentication": {},
+      "_type": "request",
+      "metaSortKey": 1
+    }
+  ]
+}
+```
+
+Puntos clave:
+- Usar `__export_format: 4`
+- Folder: `_type: "request_group"` (no "folder")
+- Requests: incluir `body` (incluso vacío `{}`), `headers` como array, `metaSortKey`
+- Incluir `parentId`, `metaSortKey` en todos los recursos
+- Workspace: incluir `scope: "collection"`
 
 ## Estructura del Proyecto
 
@@ -70,3 +132,9 @@ DRAFT → REGISTRATION → ORGANIZING → IN_PROGRESS → COMPLETED
 - **SINGLES**: Individual
 - **DOUBLES**: Pareja (HH o MM)
 - **MIXED_DOBLES**: Pareja mixta (HM)
+
+## Reglas de manejo de datos y modelos
+
+### Fechas
+- Todas las fechas deben manejarse a las 00:00:00 GMT
+- Al recibir fechas en endpoints, si no están a las 00:00:00 GMT, se deben ajustar a esa hora

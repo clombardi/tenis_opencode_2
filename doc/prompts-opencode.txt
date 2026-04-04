@@ -76,3 +76,60 @@ Prompt 6
 -------------------------------------------
 Ahora sí, te pido que procedas con la etapa 1.1 tal como está descripta en /backend/PLAN_FASE1.md.
 (este tardó unos 5 minutos)
+
+
+-------------------------------------------
+Prompt 7 (después de crear un repo git)
+-------------------------------------------
+Por favor, creá un archivo .gitignore en /backend que defina los archivos y carpetas que no conviene grabar en un repositorio Git, ¡gracias!
+
+-----------  pusheo en etapa_1.1
+
+-------------------------------------------
+Prompt 8
+-------------------------------------------
+Por favor, agregá en AGENTS.md, en la sección (ahora vacía) de procedimientos, una instrucción que indique que toda tarea que agregue, modifique o elimine endpoints que publica el backend, mantenga actualizado el archivo ENDPOINTS.md que debe describr todos los endpoints, agrupados por entidad.
+
+
+-------------------------------------------
+Prompt 9
+-------------------------------------------
+Ahora por favor, ejecutá la etapa 1.2 descripta en el archivo PLAN_FASE1.md.
+(1m 12s)
+
+-------------------------------------------
+Prompt 10 + posteriores
+-------------------------------------------
+Por favor, creá una colección de Insomnia para probar los endpoints recién creados, guardala en /doc/insomnia (carpeta a crear) con el nombre etapa_1.1, ¡gracias!
+(14s)
+
+Da error cuando quiero importar el archivo en Insomnia, da este error:
+"TypeError: Cannot read properties of undefined (reading 'type')"
+Estoy usando Insomnia 11.2.0. Te pido que hagas un intento por corregir el archivo para que pueda usarlo, gracias.
+
+El archivo que generaste no es válido. A partir del mismo, generé el archivo /doc/insomnia/etapa_1.1_fixed.json, que sí pudo cargarse correctamente. Te pido por favor que revises las diferencias, y agregues en AGENTS.md las instrucciones para que los archivos de Insomnia que generes en lo sucesivo sean válidos; agregá una sección "Generación de archivos para Insomnia" para esto. ¡Gracias!
+(29s)
+
+
+-------------------------------------------
+Prompt 11
+-------------------------------------------
+Por favor implementá las siguientes modificaciones en el endpoint POST /seed/players:
+- generá 32 jugadores en lugar de 16.
+- agregá "Vilas", "Sabatini", "Nastase", "Navratilova" y "Nalbandian" como apellidos posibles.
+- agregá "Guillermo", "Martina", "Gabriela" y "David" como nombres posibles.
+- agregá un query param de categoría, con valores "senior", "normal" o "infantiles", case-insensitive, default "normal". 
+Agregá la fecha de nacimiento de cada jugador, generada al azar para que tengan: entre 8 y 14 años para "infantiles", entre 15 y 36 para "normal", entre 37 y 60 para "senior".
+
+¡Gracias!
+
+
+
+-------------------------------------------
+Prompt 12
+-------------------------------------------
+Vamos a agregar una regla al desarrollo: siempre que tengamos que manejar fechas en objetos Date, vamos a generarlas (si las creamos) o considerarlas (si las leemos) como a las 00:00:00 GMT. En los endpoints de BE que reciben fechas, si no están a las 00:00:00 GMT, como primer paso se ajustan a esta hora.
+Por favor agregá esta indicación en AGENTS.md en una nueva sección de "Reglas de manejo de datos y modelos", y ajustá los endpoints implementados para garantizar esto.  
+¡Gracias!
+
+
