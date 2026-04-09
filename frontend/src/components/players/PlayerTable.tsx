@@ -5,7 +5,7 @@ import {
   Button, MenuItem, Select, FormControl, InputLabel
 } from '@mui/material';
 import { blue, indigo, green, orange } from '@mui/material/colors';
-import { playersApi, type Player } from '../services/api';
+import { playersApi, type Player } from '../../services/api';
 
 interface PlayerTableProps {
   onEdit: (player: Player) => void;

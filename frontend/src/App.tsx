@@ -1,37 +1,10 @@
-import { useState } from 'react';
-import { ThemeProvider, CssBaseline, Box, AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { blue, indigo } from '@mui/material/colors';
-import AddIcon from '@mui/icons-material/Add';
+import { ThemeProvider, CssBaseline, Box, AppBar, Toolbar, Typography } from '@mui/material';
+import { blue } from '@mui/material/colors';
 
 import theme from './theme';
-import PlayerTable from './components/PlayerTable';
-import PlayerForm from './components/PlayerForm';
-import { type Player } from './services/api';
+import PlayerManagement from './components/players/PlayerManagement';
 
 function App() {
-  const [openForm, setOpenForm] = useState(false);
-  const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  const handleNew = () => {
-    setEditingPlayer(null);
-    setOpenForm(true);
-  };
-
-  const handleEdit = (player: Player) => {
-    setEditingPlayer(player);
-    setOpenForm(true);
-  };
-
-  const handleSave = () => {
-    setRefreshKey(k => k + 1);
-  };
-
-  const handleClose = () => {
-    setOpenForm(false);
-    setEditingPlayer(null);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -98,41 +71,9 @@ function App() {
             </Box>
           </Box>
 
-          <Box sx={{ flex: 1, p: 2.5, overflow: 'auto' }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', mb: 2 }}>
-              <Box>
-                <Typography sx={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 600, color: indigo[900], letterSpacing: 0.3 }}>
-                  Jugadores
-                </Typography>
-                <Typography sx={{ fontSize: 12, color: blue[800], mt: 0.25 }}>
-                  Gestión de jugadores registrados en el sistema
-                </Typography>
-              </Box>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleNew}
-                sx={{ bgcolor: indigo[500], '&:hover': { bgcolor: indigo[700] }, fontSize: 12, fontWeight: 500 }}
-              >
-                Nuevo jugador
-              </Button>
-            </Box>
-
-            <PlayerTable
-              onEdit={handleEdit}
-              onDelete={() => {}}
-              refreshKey={refreshKey}
-            />
-          </Box>
+          <PlayerManagement />
         </Box>
       </Box>
-
-      <PlayerForm
-        open={openForm}
-        onClose={handleClose}
-        player={editingPlayer}
-        onSave={handleSave}
-      />
     </ThemeProvider>
   );
 }

@@ -144,3 +144,7 @@ DRAFT → REGISTRATION → ORGANIZING → IN_PROGRESS → COMPLETED
 ### Colores
 - Usar siempre las constantes de Material UI (ej. `indigo[500]`, `blue[700]`, `red[600]`)
 - No usar valores RGB hexadecimales ni otros formatos de color
+
+### Material UI 7
+- Evitar el uso de props deprecadas como `InputLabelProps`. En su lugar, usar `slotProps`:
+  - `InputLabelProps={{ shrink: true }}` → `slotProps={{ inputLabel: { shrink: true } }}`

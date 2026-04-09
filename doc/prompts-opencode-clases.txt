@@ -1,0 +1,135 @@
+-------------------------------------------
+Prompt 1
+-------------------------------------------
+¡Hola! Te pido que implementes un refactor sobre el código del frontend. 
+Específicamente, te pido que muevas los archivos en /src/components a una nueva carpeta /src/components/players, y que muevas la parte de /frontend/src/App.tsx que implementa la funcionalidad de jugadores a un nuevo componente PlayerManagement, en un nuevo archivo también en /src/components/players.
+
+¡Gracias!
+
+
+-------------------------------------------
+Prompt 2
+-------------------------------------------
+En frontend/src/components/players/PlayerForm, hay un TextField que define una prop InputLabelProps, que está deprecada en Material UI 7. Te pido que corrijas esto, usando slotProps.inputLabel. ¡Gracias!
+
+Por favor, agregá en AGENTS.md una indicación acerca de evitar el uso de InputLabelProps, dentro de la sección de reglas de codificación.
+
+
+-------------------------------------------
+Prompt 3
+-------------------------------------------
+¡Hola! Te pido que revises frontend/src/components/players/PlayerForm.tsx, y sugieras posibles validaciones de que podrían ser útiles, y cómo podrían implementarse en el marco de la solución basada en React y Material UI, ¡gracias!
+
+
+(respondió con este Markdown)
+## Análisis del PlayerForm.tsx
+
+El formulario actual tiene validaciones básicas (campos requeridos, tipo email del navegador). Aquí te sugiero validaciones adicionales útiles:
+
+### Validaciones sugeridas
+
+| Campo | Validación propuesta |
+|-------|---------------------|
+| **firstName/lastName** | Solo letras y espacios, máximo ~50 caracteres |
+| **email** | Formato válido, verificar disponibilidad (ya que es unique en backend) |
+| **documento** | Solo números, longitud específica (ej: 8 dígitos para DNI argentino) |
+| **birthDate** | No futura, rango razonable (ej: no mayor a 100 años, no menor a 10 años) |
+| **country** | Autocomplete con lista de países (evita texto libre) |
+
+### Implementación recomendada
+
+1. **Estado de errores**: Agregar un objeto `errors` al state:
+   ```typescript
+   const [errors, setErrors] = useState<Record<string, string>>({});
+   ```
+
+2. **Función de validación** antes de `handleSubmit`:
+   ```typescript
+   const validate = () => {
+     const newErrors: Record<string, string> = {};
+     if (!/^[a-zA-Z\s]+$/.test(formData.firstName)) {
+       newErrors.firstName = 'Solo letras permitidas';
+     }
+     // ... otras validaciones
+     setErrors(newErrors);
+     return Object.keys(newErrors).length === 0;
+   };
+   ```
+
+3. **Mostrar errores en campos**: Usar props `error` y `helperText` de MUI:
+   ```tsx
+   <TextField
+     label="Nombre"
+     value={formData.firstName}
+     error={!!errors.firstName}
+     helperText={errors.firstName}
+     // ...
+   />
+   ```
+
+4. **Librería opcional**: Considerar **react-hook-form** + **yup** para validación declarativa más robusta.
+
+
+-------------------------------------------
+Prompt 4
+-------------------------------------------
+Te pido que implementes las validaciones sugeridas para firstName/lastName, con un máximo de 80 caracteres; email; birthDate desde 8 a 120 años. Además la fecha de nacimiento y el documento deben ser obligatorios, y el documento tener al menos 5 caracteres.
+Para la regex de nombre y apellido por favor considerá: guiones, letras acentuadas, diéresis, cedilla, y la letra ñ.
+
+Te pido que la lógica de las validaciones esté en un hook usePlayerValidation, definido en un archivo separado en la misma carpeta. 
+El comportamiento de este hook debe garantizar el siguiente funcionamiento
+- los errores se muestran sólo para los campos que hayan sido modificados, o luego de haber intentado al menos un submit.
+- la validación se debe invocar tanto en el handleChange como en el handleSubmit.
+- si ya se intentó submitir al menos una vez y hay errores, deshabilitar el botón de guardar.
+
+Todo el estado necesario debe gestionarse en el hook, que debe exportar las funciones necesarias para garantizar el comportamiento indicado en PlayerForm.
+
+Te pido que generes un archivo Markdown con el diseño propuesto para el hook y las modificaciones que serían necesarias para usarlo en PlayerForm.
+
+¡Gracias!
+
+Generó player-validation-design-001.md.
+
+Pero algunas cosas no me gustaron. Pido ajustes.
+
+
+-------------------------------------------
+Prompt 5
+-------------------------------------------
+Te pido que revises el plan teniendo en cuenta estos comentarios:
+- Creo que no es necesaria la interface PlayerFormData en el hook, se puede usar CreatePlayerDto y definir las validaciones de los campos no previstos como undefined.
+- Definí una constante EMAIL_REGEX en forma análoga a NAME_REGEX.
+- En la definición de NAME_REGEX, tené en cuenta también los acentos áéíóú y àèìòù.
+- En lugar de la condición compleja en cada textField, exportá en el hook una función errorTextToShow(fieldName).
+
+¡Gracias!
+
+Generó player-validation-design-002.md. Le pido otro detallecito.
+
+
+
+-------------------------------------------
+Prompt 6
+-------------------------------------------
+Sólo un detalle: en lugar de la condición compleja en el disabled, exportá en el hook una función shouldDisableSave. Por favor, revisá el plan teniendo en cuenta esta observación, gracias.
+
+Generó player-validation-design-003.md. Auch me tenté, un detalle más.
+
+
+-------------------------------------------
+Prompt 7
+-------------------------------------------
+Me di cuenta de otra cosa que me gustaría cambiar: en el handleChange, tal vez se podría llamar a validateField para todos los campos, igualmente va a devolver siempre que no hay error, y de esta forma se simplifica si luego queremos agregar validaciones a otros campos. ¿Estás de acuerdo?
+Si te parece que mi sugerencia es aceptable, por favor modificá el plan para tenerla en cuenta. Caso contrario, por favor explicame qué inconveniente le ves. ¡Gracias!
+
+Generó player-validation-design-004.md. Este me gustó, vamos.
+
+
+-------------------------------------------
+Prompt 8
+-------------------------------------------
+Por favor, implementá el plan en la última versión propuesta, gracias.
+
+(pruebo ... aceptar letras, puntos y guiones en el documento)
+(incorporar esquema de validation hook en AGENTS.md)
+

@@ -4,7 +4,8 @@ import {
   Button, TextField, MenuItem, FormControl, InputLabel, Select, Box
 } from '@mui/material';
 import { blue, indigo } from '@mui/material/colors';
-import { playersApi, type Player, type CreatePlayerDto } from '../services/api';
+import { playersApi, type Player, type CreatePlayerDto } from '../../services/api';
+import { usePlayerValidation } from './usePlayerValidation';
 
 interface PlayerFormProps {
   open: boolean;
@@ -25,38 +26,47 @@ export default function PlayerForm({ open, onClose, player, onSave }: PlayerForm
     birthDate: '',
   });
   const [saving, setSaving] = useState(false);
+  const { validateField, validateAll, errorTextToShow, shouldDisableSave, reset } = usePlayerValidation();
 
   useEffect(() => {
-    if (player) {
-      setFormData({
-        firstName: player.firstName,
-        lastName: player.lastName,
-        email: player.email,
-        gender: player.gender,
-        documento: player.documento || '',
-        mano: player.mano,
-        country: player.country || '',
-        birthDate: player.birthDate ? player.birthDate.split('T')[0] : '',
-      });
-    } else {
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        gender: 'MALE',
-        documento: '',
-        mano: undefined,
-        country: '',
-        birthDate: '',
-      });
+    if (open) {
+      reset();
+      if (player) {
+        setFormData({
+          firstName: player.firstName,
+          lastName: player.lastName,
+          email: player.email,
+          gender: player.gender,
+          documento: player.documento || '',
+          mano: player.mano,
+          country: player.country || '',
+          birthDate: player.birthDate ? player.birthDate.split('T')[0] : '',
+        });
+      } else {
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          gender: 'MALE',
+          documento: '',
+          mano: undefined,
+          country: '',
+          birthDate: '',
+        });
+      }
     }
-  }, [player, open]);
+  }, [player, open, reset]);
 
   const handleChange = (field: keyof CreatePlayerDto, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    validateField(field, String(value));
   };
 
   const handleSubmit = async () => {
+    if (!validateAll(formData)) {
+      return;
+    }
+
     try {
       setSaving(true);
       const data: Record<string, unknown> = { ...formData };
@@ -96,6 +106,8 @@ export default function PlayerForm({ open, onClose, player, onSave }: PlayerForm
               onChange={(e) => handleChange('firstName', e.target.value)}
               fullWidth
               required
+              error={!!errorTextToShow('firstName')}
+              helperText={errorTextToShow('firstName')}
             />
             <TextField
               label="Apellido"
@@ -103,6 +115,8 @@ export default function PlayerForm({ open, onClose, player, onSave }: PlayerForm
               onChange={(e) => handleChange('lastName', e.target.value)}
               fullWidth
               required
+              error={!!errorTextToShow('lastName')}
+              helperText={errorTextToShow('lastName')}
             />
           </Box>
 
@@ -114,6 +128,8 @@ export default function PlayerForm({ open, onClose, player, onSave }: PlayerForm
             fullWidth
             required
             disabled={!!player}
+            error={!!errorTextToShow('email')}
+            helperText={errorTextToShow('email')}
           />
 
           <Box sx={{ display: 'flex', gap: 2 }}>
@@ -122,6 +138,8 @@ export default function PlayerForm({ open, onClose, player, onSave }: PlayerForm
               value={formData.documento}
               onChange={(e) => handleChange('documento', e.target.value)}
               fullWidth
+              error={!!errorTextToShow('documento')}
+              helperText={errorTextToShow('documento')}
             />
             <FormControl fullWidth>
               <InputLabel>Mano</InputLabel>
@@ -163,7 +181,9 @@ export default function PlayerForm({ open, onClose, player, onSave }: PlayerForm
             value={formData.birthDate}
             onChange={(e) => handleChange('birthDate', e.target.value)}
             fullWidth
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ inputLabel: { shrink: true } }}
+            error={!!errorTextToShow('birthDate')}
+            helperText={errorTextToShow('birthDate')}
           />
         </Box>
       </DialogContent>
@@ -173,7 +193,7 @@ export default function PlayerForm({ open, onClose, player, onSave }: PlayerForm
           onClick={handleSubmit}
           variant="contained"
           sx={{ bgcolor: indigo[500], '&:hover': { bgcolor: indigo[700] } }}
-          disabled={saving || !formData.firstName || !formData.lastName || !formData.email}
+          disabled={saving || shouldDisableSave()}
         >
           {saving ? 'Guardando...' : 'Guardar'}
         </Button>
