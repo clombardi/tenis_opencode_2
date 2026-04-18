@@ -17,3 +17,16 @@
 |--------|----------|-------------|
 | GET | /categories | Listar categorías (ordenadas por tier) |
 | POST | /seed/categories | Seed de categorías iniciales - solo desarrollo |
+
+## Tournament
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | /tournaments | Crear torneo (estado DRAFT) |
+| GET | /tournaments | Listar con filtros (status, genderCategory, mode, categoryId) |
+| GET | /tournaments/:id | Ver detalle |
+| PATCH | /tournaments/:id | Actualizar (solo si DRAFT) |
+| DELETE | /tournaments/:id | Eliminar (solo si DRAFT) |
+| PATCH | /tournaments/:id/close-registration | Cerrar inscripciones (REGISTRATION → ORGANIZING) |
+| PATCH | /tournaments/:id/start | Iniciar tournament (ORGANIZING → IN_PROGRESS) |
+| PATCH | /tournaments/:id/status | Cambiar estado |
