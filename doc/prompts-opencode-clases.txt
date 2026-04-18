@@ -133,3 +133,35 @@ Por favor, implementá el plan en la última versión propuesta, gracias.
 (pruebo ... aceptar letras, puntos y guiones en el documento)
 (incorporar esquema de validation hook en AGENTS.md)
 
+
+
+-------------------------------------------
+Prompt 9
+-------------------------------------------
+¡Hola! Te pido que agregues parte de la funcionalidad de BE relacionada con las categorías, modelo TournamentCategory en backend/prisma/schema.prisma.
+Específicamente, quiero el
+- GET /categories
+- POST /seed/categories, que cree las categorías mencionadas en /backend/PLAN_FASE1.md, etapa 1.3.
+
+Generá el plan en doc/opencode-plans/categories-initial-be.md. ¡Gracias!
+
+(no le gustó opencode-plans con el dash)
+
+Cambié el nombre de la carpeta opencode-plans a opencode_plans, por favor volvé a intentar guardar el plan, gracias.
+
+(paso a modo build a ver si es eso)
+
+grabó, lo miro, está OK, le digo que lo implemente, salió de una.
+
+
+
+-------------------------------------------
+Prompt 10
+-------------------------------------------
+¡Hola! Te pido que agregues la funcionalidad de BE relacionada con los torneos, modelo Tournament en backend/prisma/schema.prisma.
+Implementá por favor todos los endpoints indicados en /backend/PLAN_FASE1.md, etapa 1.4. Te pido que dejemos los modelos de TournamentRound y de Registration para fases posteriores, por ahora necesito la funcionalidad necesaria para poder implementar el FE de alta/baja/modificación/consulta de torneos.
+Por favor generá el plan para implementar la funcionalidad recién solicitada, ¡gracias!
+
+(me presenta un plan sin DELETE, así está en PLAN_FASE1.md)
+
+Por favor, incluí también un DELETE, que verifique que el torneo esté en estado DRAFT
