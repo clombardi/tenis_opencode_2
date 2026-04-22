@@ -143,6 +143,19 @@ export class TournamentsService {
     });
   }
 
+  async openRegistration(id: string) {
+    const tournament = await this.findOne(id);
+
+    if (tournament.status !== TournamentStatus.DRAFT) {
+      throw new ForbiddenException('Can only open registration when status is DRAFT');
+    }
+
+    return this.prisma.tournament.update({
+      where: { id },
+      data: { status: TournamentStatus.REGISTRATION },
+    });
+  }
+
   async start(id: string) {
     const tournament = await this.findOne(id);
 

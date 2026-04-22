@@ -140,7 +140,7 @@ export default function TournamentManagement() {
     setSelectedTournament(null);
   };
 
-  const handleMenuAction = (action: string) => {
+  const handleMenuAction = async (action: string) => {
     handleMenuClose();
     if (!selectedTournament) return;
 
@@ -149,7 +149,8 @@ export default function TournamentManagement() {
         handleEdit(selectedTournament);
         break;
       case 'openRegistration':
-        console.log('Abrir inscripción', selectedTournament.id);
+        await tournamentsApi.openRegistration(selectedTournament.id);
+        loadTournaments();
         break;
       case 'manageRegistrations':
         handleRegistrations(selectedTournament);

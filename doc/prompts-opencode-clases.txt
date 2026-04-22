@@ -321,4 +321,33 @@ Le pido que la implemente.
 Fin, no genera más errores de consola.
 
 
+-------------------------------------------
+Prompt 17
+-------------------------------------------
+Una cortita: implementar la acción "Abrir inscripción".
+Me fijo en el BE, tengo un PATCH /tournaments/:id/close-registration, pero no un PATCH /tournaments/:id/open-registration.
+
+Entonces le voy a pedir que de una, agregue el endpoint en el BE y lo llame en el FE.
+
+¡Hola!
+Te pido que implementes la opción 'openRegistration' en src/components/tournaments/TournamentManagement.
+Esto consiste sencillamente en llamar al endpoint PATCH /tournaments/:id/open-registration. Este endpoint debe ser creado en el BE, con un comportamiento análogo al de PATCH /tournaments/:id/open-registration, pasando un torneo de DRAFT a REGISTRATION.
+
+Por favor guardá el plan para implementar este agregado en doc/opencode_plans.
+
+¡Gracias!
+
+Dos cosas
+1. Generó el plan y también lo ejecutó.
+2. No agregó el endpoint en ENDPOINTS.md. Se lo pedí aparte.
+   Por favor, agregá el endpoint nuevo en backend/ENDPOINTS.md
+
+Ver en network las llamadas API.
+
+Mandamos para atrás el torneo desde DBeaver. Comentar que se podría usar la IA para esto.
+Aside: cambiemos la categoría en lugar del status.
+
+
+
+
 

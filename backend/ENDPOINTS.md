@@ -28,5 +28,6 @@
 | PATCH | /tournaments/:id | Actualizar (solo si DRAFT) |
 | DELETE | /tournaments/:id | Eliminar (solo si DRAFT) |
 | PATCH | /tournaments/:id/close-registration | Cerrar inscripciones (REGISTRATION → ORGANIZING) |
+| PATCH | /tournaments/:id/open-registration | Abrir inscripciones (DRAFT → REGISTRATION) |
 | PATCH | /tournaments/:id/start | Iniciar tournament (ORGANIZING → IN_PROGRESS) |
 | PATCH | /tournaments/:id/status | Cambiar estado |

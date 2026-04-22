@@ -105,6 +105,12 @@ export const tournamentsApi = {
 
   delete: (id: string) =>
     api.delete(`/tournaments/${id}`),
+
+  openRegistration: (id: string) =>
+    api.patch(`/tournaments/${id}/open-registration`),
+
+  closeRegistration: (id: string) =>
+    api.patch(`/tournaments/${id}/close-registration`),
 };
 
 export default api;

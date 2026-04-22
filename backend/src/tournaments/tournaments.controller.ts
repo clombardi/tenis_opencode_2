@@ -49,6 +49,11 @@ export class TournamentsController {
     return this.tournamentsService.closeRegistration(id);
   }
 
+  @Patch(':id/open-registration')
+  openRegistration(@Param('id', ParseUUIDPipe) id: string) {
+    return this.tournamentsService.openRegistration(id);
+  }
+
   @Patch(':id/start')
   start(@Param('id', ParseUUIDPipe) id: string) {
     return this.tournamentsService.start(id);
