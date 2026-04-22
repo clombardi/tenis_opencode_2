@@ -259,6 +259,13 @@ Por ahora sólo generá el plan y guardalo en doc/opencode_plans, no modifiques 
 
 
 
+-------------------------------------------
+Comentario
+-------------------------------------------
+Lo de editar torneo no lo desarrollamos, es análogo a lo que ya vimos de editar jugadores.
+Vamos a ir por las inscripciones.
+
+
 
 -------------------------------------------
 Prompt 15
@@ -272,3 +279,41 @@ Genera tennis-inscripciones-01.html.
 Ahora te pido que generes una versión alternativa, con una pantalla que muestre un torneo con los participantes ya inscriptos y en la misma pantalla, una opción para agregar uno o varios participantes adicionales. ¡Gracias!
 
 Genera tennis-inscripciones-02.html.
+
+Por favor avancemos con esta idea. Te pido que hagas una versión que muestre cuáles de los jugadores se eligieron al ir pulsando "+" sobre los jugadores en la lista de la derecha, y que al pulsar "Inscribir Seleccionados" actualice las dos listas. ¡Gracias!
+
+Después de 2 minutos largos, generó tennis-inscripciones-03.html.
+
+
+-------------------------------------------
+Prompt 16
+-------------------------------------------
+Yendo al manejo de torneos, no me convence lo de "Editar" e "Inscripciones", depende del estado
+- si estoy en estado "borrador", es Editar / Abrir inscripción.
+- si estoy en estado "inscribiendo", es Manejar inscripciones / Cerrar inscripciones.
+Los textos se me hacen largos, los reemplazamos por un menú de tres puntos verticales.
+
+Hola, te pido unos ajustes en la tabla de torneos. En lugar de los botones actuales "Editar" e "Inscripciones", agregá un menú con tres puntos verticales, con acciones que dependan del estado del torneo.
+- si el estado es "DRAFT", entonces las opciones son "Editar" y "Abrir inscripción".
+- si el estado es "REGISTRATION", entonces las opciones son "Manejar inscripciones" y "Cerrar inscripciones".
+
+Por favor, guardá el plan de implementación de este cambio en /doc/opencode_plans, ¡gracias!
+
+(el plan en tournament-actions-menu.md está perfecto, se ejecuta)
+
+Voy a ver la consola para los mensajes, me salen errores, ver doc/dev-images/console-errors-01.jpg.
+Se lo tiro a OpenCode a ver qué dice, en modo plan.
+
+Al abrir la página de torneos en un browser, aparece este error en la consola.
+MUI: The Menu component doesn't accept a Fragment as a child. Consider providing an array instead.
+Esto no aparece con la página de jugadores.
+Te pido que me indiques dónde está el error en el código, y cómo se podría resolver. ¡Gracias!
+
+(con modo plan me lo muestra cortado, le pido que grabe en archivo en modo build)
+agregamos
+Generá un archivo en doc/opencode_plans con tus conclusiones. 
+
+Generó menu-fragment-error.md.
+Está buena para estudiarla la solución.
+
+

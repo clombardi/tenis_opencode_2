@@ -2,18 +2,25 @@ import { useState, useEffect } from 'react';
 import {
   Box, Typography, Button, TextField, InputAdornment, Chip,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper
+  Paper, IconButton, Menu, MenuItem, ListItemIcon, ListItemText
 } from '@mui/material';
 import { blue, indigo, green, amber, red, teal, purple, pink, orange, grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import GroupsIcon from '@mui/icons-material/Groups';
+import BlockIcon from '@mui/icons-material/Block';
 import { tournamentsApi, type Tournament } from '../../services/api';
 
 export default function TournamentManagement() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
 
   useEffect(() => {
     loadTournaments();
@@ -121,6 +128,36 @@ export default function TournamentManagement() {
 
   const handleRegistrations = (tournament: Tournament) => {
     console.log('Inscripciones', tournament.id);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, tournament: Tournament) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTournament(tournament);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedTournament(null);
+  };
+
+  const handleMenuAction = (action: string) => {
+    handleMenuClose();
+    if (!selectedTournament) return;
+
+    switch (action) {
+      case 'edit':
+        handleEdit(selectedTournament);
+        break;
+      case 'openRegistration':
+        console.log('Abrir inscripción', selectedTournament.id);
+        break;
+      case 'manageRegistrations':
+        handleRegistrations(selectedTournament);
+        break;
+      case 'closeRegistration':
+        console.log('Cerrar inscripciones', selectedTournament.id);
+        break;
+    }
   };
 
   if (loading) {
@@ -292,32 +329,45 @@ export default function TournamentManagement() {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Button
-                        size="small"
-                        onClick={() => handleEdit(tournament)}
-                        sx={{
-                          fontSize: 10,
-                          color: blue[800],
-                          border: `0.5px solid ${blue[200]}`,
-                          '&:hover': { bgcolor: blue[100] },
-                        }}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        size="small"
-                        onClick={() => handleRegistrations(tournament)}
-                        sx={{
-                          fontSize: 10,
-                          color: purple[700],
-                          border: `0.5px solid ${purple[200]}`,
-                          '&:hover': { bgcolor: purple[50] },
-                        }}
-                      >
-                        Inscripciones
-                      </Button>
-                    </Box>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => handleMenuOpen(e, tournament)}
+                      sx={{ color: grey[600] }}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl) && selectedTournament?.id === tournament.id}
+                      onClose={handleMenuClose}
+                      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    >
+                      {tournament.status === 'DRAFT' && (
+                        <>
+                          <MenuItem onClick={() => handleMenuAction('edit')}>
+                            <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
+                            <ListItemText>Editar</ListItemText>
+                          </MenuItem>
+                          <MenuItem onClick={() => handleMenuAction('openRegistration')}>
+                            <ListItemIcon><HowToRegIcon fontSize="small" /></ListItemIcon>
+                            <ListItemText>Abrir inscripción</ListItemText>
+                          </MenuItem>
+                        </>
+                      )}
+                      {tournament.status === 'REGISTRATION' && (
+                        <>
+                          <MenuItem onClick={() => handleMenuAction('manageRegistrations')}>
+                            <ListItemIcon><GroupsIcon fontSize="small" /></ListItemIcon>
+                            <ListItemText>Manejar inscripciones</ListItemText>
+                          </MenuItem>
+                          <MenuItem onClick={() => handleMenuAction('closeRegistration')}>
+                            <ListItemIcon><BlockIcon fontSize="small" /></ListItemIcon>
+                            <ListItemText>Cerrar inscripciones</ListItemText>
+                          </MenuItem>
+                        </>
+                      )}
+                    </Menu>
                   </TableCell>
                 </TableRow>
               );
