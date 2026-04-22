@@ -316,4 +316,9 @@ Generá un archivo en doc/opencode_plans con tus conclusiones.
 Generó menu-fragment-error.md.
 Está buena para estudiarla la solución.
 
+Le pido que la implemente.
+
+Fin, no genera más errores de consola.
+
+
 

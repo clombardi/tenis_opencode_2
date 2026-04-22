@@ -160,6 +160,22 @@ export default function TournamentManagement() {
     }
   };
 
+  const getMenuItems = (status: string) => {
+    if (status === 'DRAFT') {
+      return [
+        { label: 'Editar', icon: <EditIcon fontSize="small" />, action: 'edit' },
+        { label: 'Abrir inscripción', icon: <HowToRegIcon fontSize="small" />, action: 'openRegistration' },
+      ];
+    }
+    if (status === 'REGISTRATION') {
+      return [
+        { label: 'Manejar inscripciones', icon: <GroupsIcon fontSize="small" />, action: 'manageRegistrations' },
+        { label: 'Cerrar inscripciones', icon: <BlockIcon fontSize="small" />, action: 'closeRegistration' },
+      ];
+    }
+    return [];
+  };
+
   if (loading) {
     return (
       <Box sx={{ p: 3 }}>
@@ -343,30 +359,12 @@ export default function TournamentManagement() {
                       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                     >
-                      {tournament.status === 'DRAFT' && (
-                        <>
-                          <MenuItem onClick={() => handleMenuAction('edit')}>
-                            <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
-                            <ListItemText>Editar</ListItemText>
-                          </MenuItem>
-                          <MenuItem onClick={() => handleMenuAction('openRegistration')}>
-                            <ListItemIcon><HowToRegIcon fontSize="small" /></ListItemIcon>
-                            <ListItemText>Abrir inscripción</ListItemText>
-                          </MenuItem>
-                        </>
-                      )}
-                      {tournament.status === 'REGISTRATION' && (
-                        <>
-                          <MenuItem onClick={() => handleMenuAction('manageRegistrations')}>
-                            <ListItemIcon><GroupsIcon fontSize="small" /></ListItemIcon>
-                            <ListItemText>Manejar inscripciones</ListItemText>
-                          </MenuItem>
-                          <MenuItem onClick={() => handleMenuAction('closeRegistration')}>
-                            <ListItemIcon><BlockIcon fontSize="small" /></ListItemIcon>
-                            <ListItemText>Cerrar inscripciones</ListItemText>
-                          </MenuItem>
-                        </>
-                      )}
+                      {getMenuItems(tournament.status).map((item) => (
+                        <MenuItem key={item.action} onClick={() => handleMenuAction(item.action)}>
+                          <ListItemIcon>{item.icon}</ListItemIcon>
+                          <ListItemText>{item.label}</ListItemText>
+                        </MenuItem>
+                      ))}
                     </Menu>
                   </TableCell>
                 </TableRow>
