@@ -46,7 +46,7 @@ function validateFieldValue(field: ValidatableField, value: string): string | un
     case 'documento':
       if (!value.trim()) return 'El campo es obligatorio';
       if (value.length < MIN_DOCUMENTO_LENGTH) return `Mínimo ${MIN_DOCUMENTO_LENGTH} caracteres`;
-      if (!/^\d+$/.test(value)) return 'Solo números';
+      if (!/^[0-9A-Za-z\-]+$/.test(value)) return 'Solo números, letras y guiones';
       return undefined;
     case 'birthDate':
       if (!value) return 'El campo es obligatorio';

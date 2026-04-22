@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TennisManager — Detalle de Torneo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue-50:  #E3F2FD; --blue-100: #BBDEFB; --blue-200: #90CAF9;
+      --blue-300: #64B5F6; --blue-400: #42A5F5; --blue-500: #2196F3;
+      --blue-600: #1E88E5; --blue-700: #1976D2; --blue-800: #1565C0;
+      --blue-900: #0D47A1; --blue-A200:#40C4FF;
+      --green-50: #E8F5E9; --green-100:#C8E6C9; --green-500:#4CAF50; --green-700:#388E3C;
+      --amber-100:#FFECB3; --amber-800:#FF8F00;
+      --orange-100:#FFE0B2; --orange-700:#F57C00;
+      --red-50:   #FFEBEE; --red-100:#FFCDD2; --red-500:#F44336; --red-700:#D32F2F;
+      --teal-100: #B2DFDB; --teal-700: #00796B;
+      --purple-100:#E1BEE7; --purple-700:#7B1FA2;
+      --grey-50:#FAFAFA; --grey-100:#F5F5F5; --grey-200:#EEEEEE;
+      --grey-300:#E0E0E0; --grey-400:#BDBDBD; --grey-500:#9E9E9E; --grey-700:#616161;
+
+      --sidebar-bg: var(--blue-800); --sidebar-active: var(--blue-600);
+      --sidebar-hover: var(--blue-700); --titlebar-bg: var(--blue-900);
+      --content-bg: var(--blue-50); --card-bg: #FFFFFF;
+      --accent: var(--blue-A200); --text-primary: var(--blue-900);
+      --text-secondary: var(--blue-700); --border: var(--blue-100);
+      --row-hover: var(--blue-50);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif; background: var(--content-bg);
+      color: var(--text-primary); display: flex; flex-direction: column;
+      height: 100vh; overflow: hidden;
+    }
+
+    /* ══ TITLEBAR ══ */
+    .titlebar {
+      background: var(--titlebar-bg); color: #fff; height: 56px;
+      display: flex; align-items: center; padding: 0 24px; gap: 14px;
+      z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.35); flex-shrink: 0;
+    }
+    .titlebar__logo { width: 32px; height: 32px; flex-shrink: 0; }
+    .titlebar__wordmark {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 22px;
+      font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1;
+    }
+    .titlebar__wordmark span { color: var(--accent); }
+    .titlebar__divider { width: 1px; height: 28px; background: rgba(255,255,255,.2); margin: 0 4px; }
+    .titlebar__subtitle { font-size: 13px; color: var(--blue-200); font-weight: 500; letter-spacing: .04em; }
+    .titlebar__spacer { flex: 1; }
+    .titlebar__user { display: flex; align-items: center; gap: 10px; }
+    .titlebar__avatar {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--blue-600);
+      border: 2px solid var(--blue-400); display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 13px; color: #fff;
+    }
+    .titlebar__username { font-size: 13px; color: var(--blue-200); font-weight: 500; }
+
+    .layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      background: var(--sidebar-bg); width: 220px; flex-shrink: 0;
+      display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto;
+    }
+    .nav-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--blue-300); padding: 20px 20px 6px;
+    }
+    .nav-section-label:first-child { padding-top: 8px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+      cursor: pointer; color: var(--blue-100); font-size: 14px; font-weight: 500;
+      border-left: 3px solid transparent; transition: background .15s, border-color .15s, color .15s;
+      user-select: none;
+    }
+    .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
+    .nav-item.active { background: var(--sidebar-active); border-left-color: var(--accent); color: #fff; }
+    .nav-icon { width: 20px; height: 20px; flex-shrink: 0; opacity: .85; }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .sidebar__bottom { margin-top: auto; border-top: 1px solid rgba(255,255,255,.1); padding-top: 8px; }
+
+    /* ══ MAIN ══ */
+    .main {
+      flex: 1; overflow-y: auto; padding: 28px 32px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--grey-500);
+    }
+    .breadcrumb a {
+      color: var(--blue-500); text-decoration: none; font-weight: 500;
+      transition: color .12s;
+    }
+    .breadcrumb a:hover { color: var(--blue-700); }
+    .breadcrumb__sep { color: var(--grey-400); }
+
+    /* ── Tournament hero card ── */
+    .hero-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; box-shadow: 0 2px 10px rgba(13,71,161,.08);
+    }
+    .hero-card__banner {
+      height: 8px;
+      background: linear-gradient(90deg, var(--blue-700), var(--blue-400), var(--accent));
+    }
+    .hero-card__body {
+      padding: 22px 28px; display: flex; align-items: center; gap: 24px;
+    }
+    .hero-card__icon {
+      width: 56px; height: 56px; border-radius: 12px; flex-shrink: 0;
+      background: var(--blue-100); display: flex; align-items: center; justify-content: center;
+    }
+    .hero-card__icon svg { color: var(--blue-700); }
+    .hero-card__info { flex: 1; }
+    .hero-card__title {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 26px;
+      font-weight: 700; color: var(--text-primary); line-height: 1.1;
+    }
+    .hero-card__meta {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 6px;
+    }
+
+    /* Tag pills in hero */
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px;
+      border-radius: 12px; font-size: 12px; font-weight: 600; letter-spacing: .02em;
+    }
+    .tag--category  { background: var(--blue-100); color: var(--blue-800); }
+    .tag--masc      { background: #E3F2FD; color: #1565C0; }
+    .tag--fem       { background: #FCE4EC; color: #880E4F; }
+    .tag--mixed     { background: var(--purple-100); color: var(--purple-700); }
+    .tag--singles   { background: var(--blue-50); color: var(--blue-700); border: 1px solid var(--blue-200); }
+    .tag--doubles   { background: var(--orange-100); color: var(--orange-700); }
+    .tag--status    { background: var(--green-100); color: var(--green-700); }
+    .tag--dates     { background: var(--grey-100); color: var(--grey-700); font-weight: 500; }
+
+    /* Hero stats */
+    .hero-card__stats {
+      display: flex; gap: 24px; flex-shrink: 0; align-items: center;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat__value {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 30px;
+      font-weight: 700; color: var(--text-primary); line-height: 1;
+    }
+    .hero-stat__label {
+      font-size: 11px; color: var(--text-secondary); font-weight: 500; margin-top: 2px;
+    }
+    .hero-stat__divider {
+      width: 1px; height: 40px; background: var(--grey-300);
+    }
+
+    /* Progress bar */
+    .capacity-bar {
+      display: flex; flex-direction: column; gap: 4px; min-width: 140px;
+    }
+    .capacity-bar__track {
+      height: 8px; background: var(--grey-200); border-radius: 4px; overflow: hidden;
+    }
+    .capacity-bar__fill {
+      height: 100%; border-radius: 4px; transition: width .4s ease;
+    }
+    .capacity-bar__fill--ok   { background: linear-gradient(90deg, var(--blue-400), var(--blue-600)); }
+    .capacity-bar__fill--warn { background: linear-gradient(90deg, var(--amber-800), #FFB300); }
+    .capacity-bar__fill--full { background: linear-gradient(90deg, var(--green-500), var(--green-700)); }
+    .capacity-bar__label {
+      font-size: 11px; color: var(--grey-500); font-weight: 500; text-align: center;
+    }
+
+    /* ── Two-column layout ── */
+    .content-columns {
+      display: flex; gap: 20px; flex: 1; min-height: 0;
+    }
+
+    /* Left: Registered players */
+    .col-registered {
+      flex: 1; display: flex; flex-direction: column; min-width: 0;
+    }
+
+    /* Right: Add players */
+    .col-add {
+      width: 360px; flex-shrink: 0; display: flex; flex-direction: column;
+    }
+
+    /* Card wrapper */
+    .panel {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+      overflow: hidden; box-shadow: 0 2px 8px rgba(13,71,161,.08);
+      display: flex; flex-direction: column; flex: 1; min-height: 0;
+    }
+    .panel__header {
+      display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+      border-bottom: 1px solid var(--border); background: #fff; flex-shrink: 0;
+    }
+    .panel__title {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 16px;
+      font-weight: 700; color: var(--text-primary); letter-spacing: .02em;
+    }
+    .panel__count {
+      font-size: 11px; background: var(--blue-100); color: var(--blue-700);
+      padding: 2px 8px; border-radius: 10px; font-weight: 700;
+    }
+    .panel__spacer { flex: 1; }
+    .panel__body { flex: 1; overflow-y: auto; }
+
+    /* ── Registered players table ── */
+    .reg-table { width: 100%; border-collapse: collapse; }
+    .reg-table thead { background: var(--blue-900); position: sticky; top: 0; z-index: 2; }
+    .reg-table thead th {
+      text-align: left; padding: 10px 14px;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
+      font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--blue-200); white-space: nowrap;
+    }
+    .reg-table tbody tr { border-bottom: 1px solid var(--grey-200); transition: background .12s; }
+    .reg-table tbody tr:last-child { border-bottom: none; }
+    .reg-table tbody tr:hover { background: var(--row-hover); }
+    .reg-table tbody td { padding: 10px 14px; font-size: 13px; color: var(--text-primary); vertical-align: middle; }
+
+    .player-cell { display: flex; align-items: center; gap: 10px; }
+    .player-avatar {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 12px; color: #fff;
+    }
+    .player-name { font-weight: 600; color: var(--blue-800); font-size: 13px; }
+    .player-doc  { font-size: 11px; color: var(--grey-500); margin-top: 1px; }
+
+    .pos-pill {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 30px; padding: 2px 8px; border-radius: 5px;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 15px;
+      font-weight: 700; background: var(--grey-100); border: 1px solid var(--grey-300);
+      color: var(--text-primary);
+    }
+    .pos-pill.top { background: var(--blue-100); border-color: var(--blue-300); color: var(--blue-800); }
+
+    .date-sm { font-size: 12px; color: var(--grey-700); }
+
+    .btn-icon-danger {
+      width: 28px; height: 28px; border-radius: 4px; border: 1px solid var(--grey-300);
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background .12s, border-color .12s;
+    }
+    .btn-icon-danger svg { color: var(--grey-400); transition: color .12s; }
+    .btn-icon-danger:hover { background: var(--red-50); border-color: var(--red-100); }
+    .btn-icon-danger:hover svg { color: var(--red-500); }
+
+    /* ── Add players panel ── */
+    .add-panel__search {
+      display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+      border-bottom: 1px solid var(--border); background: var(--grey-50);
+    }
+    .add-panel__search input {
+      border: none; background: transparent; font-family: 'Barlow', sans-serif;
+      font-size: 13px; color: var(--text-primary); outline: none; width: 100%;
+    }
+    .add-panel__search input::placeholder { color: var(--grey-500); }
+
+    .add-panel__list { flex: 1; overflow-y: auto; }
+
+    .add-player-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+      border-bottom: 1px solid var(--grey-200); transition: background .12s;
+    }
+    .add-player-row:last-child { border-bottom: none; }
+    .add-player-row:hover { background: var(--blue-50); }
+
+    .add-player-row .player-info { flex: 1; min-width: 0; }
+    .add-player-row .player-ranking {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+      color: var(--grey-500); font-weight: 600; white-space: nowrap;
+    }
+
+    .add-player-row .pos-input {
+      width: 52px; padding: 5px 6px; border: 1.5px solid var(--grey-300);
+      border-radius: 5px; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--text-primary);
+      text-align: center; outline: none; transition: border-color .15s;
+    }
+    .add-player-row .pos-input:focus {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 3px rgba(33,150,243,.12);
+    }
+
+    .btn-add-sm {
+      width: 28px; height: 28px; border-radius: 50%; border: none;
+      background: var(--blue-600); color: #fff; display: flex;
+      align-items: center; justify-content: center; cursor: pointer;
+      box-shadow: 0 1px 4px rgba(21,101,192,.3); transition: background .12s, transform .12s;
+      flex-shrink: 0;
+    }
+    .btn-add-sm:hover { background: var(--blue-700); transform: scale(1.08); }
+
+    /* Already added state */
+    .add-player-row.already-added {
+      opacity: .45; pointer-events: none;
+    }
+    .add-player-row.already-added .btn-add-sm {
+      background: var(--grey-300); box-shadow: none;
+    }
+    .already-label {
+      font-size: 10px; color: var(--grey-500); font-weight: 600;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+
+    /* Footer with batch add */
+    .add-panel__footer {
+      padding: 12px 16px; border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 8px; background: var(--grey-50);
+    }
+    .selection-summary {
+      font-size: 12px; color: var(--text-secondary); font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .selection-count {
+      background: var(--blue-600); color: #fff; font-size: 11px; font-weight: 700;
+      padding: 1px 7px; border-radius: 8px;
+    }
+    .btn-add-all {
+      background: var(--blue-600); color: #fff; border: none; border-radius: 6px;
+      padding: 10px 16px; font-family: 'Barlow', sans-serif; font-size: 13px;
+      font-weight: 600; letter-spacing: .03em; cursor: pointer; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 2px 6px rgba(21,101,192,.3); transition: background .15s;
+    }
+    .btn-add-all:hover { background: var(--blue-700); }
+
+    .panel__footer-info {
+      font-size: 11px; color: var(--grey-500); text-align: center; font-weight: 500;
+    }
+
+    /* ── Responsive tweaks ── */
+    .reg-toolbar {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .reg-search {
+      display: flex; align-items: center; gap: 6px; background: var(--grey-100);
+      border: 1px solid var(--grey-300); border-radius: 4px; padding: 6px 10px;
+      flex: 1; max-width: 240px;
+    }
+    .reg-search input {
+      border: none; background: transparent; font-family: 'Barlow', sans-serif;
+      font-size: 13px; color: var(--text-primary); outline: none; width: 100%;
+    }
+    .reg-search input::placeholder { color: var(--grey-500); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--blue-200); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ══ TITLEBAR ══ -->
+<header class="titlebar">
+  <svg class="titlebar__logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="14" cy="14" r="11" stroke="#40C4FF" stroke-width="2.2"/>
+    <line x1="14" y1="3" x2="14" y2="25" stroke="#40C4FF" stroke-width="1.5"/>
+    <line x1="3" y1="14" x2="25" y2="14" stroke="#40C4FF" stroke-width="1.5"/>
+    <line x1="6" y1="6.5" x2="21.5" y2="22" stroke="#40C4FF" stroke-width="1"/>
+    <line x1="6" y1="21.5" x2="21.5" y2="6" stroke="#40C4FF" stroke-width="1"/>
+    <line x1="22" y1="22" x2="29" y2="29" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div class="titlebar__wordmark">Tennis<span>Manager</span></div>
+  <div class="titlebar__divider"></div>
+  <div class="titlebar__subtitle">Sistema de Gestión de Torneos</div>
+  <div class="titlebar__spacer"></div>
+  <div class="titlebar__user">
+    <div class="titlebar__username">Admin</div>
+    <div class="titlebar__avatar">AD</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <nav class="sidebar">
+    <div class="nav-section-label">Principal</div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Panel General
+    </div>
+    <div class="nav-section-label">Gestión</div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8V21h19.2v-1.8c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      Jugadores
+    </div>
+    <div class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V17H7v2h10v-2h-4v-1.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+      Torneos
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      Inscripciones
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v8h-8zm0 10h8v8h-8zM3 13h8v8H3z"/></svg>
+      Cuadros
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3h-1V1h-2v2H7V1H5v2H4C2.9 3 2 3.9 2 5v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>
+      Calendario
+    </div>
+    <div class="nav-section-label">Resultados</div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      Estadísticas
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      Rankings
+    </div>
+    <div class="sidebar__bottom">
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87a.48.48 0 0 0 .12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.48.48 0 0 0-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        Configuración
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="#">Torneos</a>
+      <span class="breadcrumb__sep">›</span>
+      <span style="color:var(--text-primary);font-weight:600">Copa Primavera 2026</span>
+      <span class="breadcrumb__sep">›</span>
+      <span>Inscripciones</span>
+    </div>
+
+    <!-- Tournament hero card -->
+    <div class="hero-card">
+      <div class="hero-card__banner"></div>
+      <div class="hero-card__body">
+        <div class="hero-card__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V17H7v2h10v-2h-4v-1.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+        </div>
+        <div class="hero-card__info">
+          <div class="hero-card__title">Copa Primavera 2026</div>
+          <div class="hero-card__meta">
+            <span class="tag tag--category">Sub-18</span>
+            <span class="tag tag--masc">Masculino</span>
+            <span class="tag tag--singles">Singles</span>
+            <span class="tag tag--status"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green-700);margin-right:3px"></span>En Curso</span>
+            <span class="tag tag--dates">15/04 — 22/04/2026</span>
+          </div>
+        </div>
+        <div class="hero-card__stats">
+          <div class="hero-stat">
+            <div class="hero-stat__value">12</div>
+            <div class="hero-stat__label">Inscriptos</div>
+          </div>
+          <div class="hero-stat__divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat__value">32</div>
+            <div class="hero-stat__label">Cuadro</div>
+          </div>
+          <div class="hero-stat__divider"></div>
+          <div class="capacity-bar">
+            <div class="capacity-bar__track">
+              <div class="capacity-bar__fill capacity-bar__fill--ok" style="width:37.5%"></div>
+            </div>
+            <div class="capacity-bar__label">12 / 32 — 37 % completo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="content-columns">
+
+      <!-- LEFT: Registered players -->
+      <div class="col-registered">
+        <div class="panel">
+          <div class="panel__header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--blue-700)"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <div class="panel__title">Jugadores Inscriptos</div>
+            <div class="panel__count">12</div>
+            <div class="panel__spacer"></div>
+            <div class="reg-search" style="max-width:200px;margin:0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:var(--grey-500);flex-shrink:0"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <input type="text" placeholder="Buscar inscripto…" />
+            </div>
+          </div>
+          <div class="panel__body">
+            <table class="reg-table">
+              <thead>
+                <tr>
+                  <th style="width:60px">Pos.</th>
+                  <th>Jugador</th>
+                  <th style="width:110px">Fecha Insc.</th>
+                  <th style="width:50px"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="pos-pill top">1</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#1565C0">CN</div><div><div class="player-name">Carlos Nalbandian</div><div class="player-doc">ARG-00142 · Ranking #1</div></div></div></td><td class="date-sm">01/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill top">2</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#0D47A1">JP</div><div><div class="player-name">João Pereira</div><div class="player-doc">BRA-00071 · Ranking #7</div></div></div></td><td class="date-sm">02/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill top">3</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#006064">MT</div><div><div class="player-name">Marco Trevi</div><div class="player-doc">ITA-00217 · Ranking #3</div></div></div></td><td class="date-sm">02/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill top">4</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#283593">TW</div><div><div class="player-name">Thomas Weber</div><div class="player-doc">DEU-00633 · Ranking #12</div></div></div></td><td class="date-sm">03/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">5</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#4527A0">YM</div><div><div class="player-name">Yuki Matsuda</div><div class="player-doc">JPN-00812 · Ranking #18</div></div></div></td><td class="date-sm">03/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">6</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#1A237E">AR</div><div><div class="player-name">Amara Rousseau</div><div class="player-doc">FRA-00504 · Ranking #5</div></div></div></td><td class="date-sm">04/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">7</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#01579B">SK</div><div><div class="player-name">Sonia Kowalczyk</div><div class="player-doc">POL-00198 · Ranking #9</div></div></div></td><td class="date-sm">05/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">8</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#0277BD">LG</div><div><div class="player-name">Luisa García</div><div class="player-doc">ESP-00389 · Ranking #2</div></div></div></td><td class="date-sm">05/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">9</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#2E7D32">DF</div><div><div class="player-name">Diego Fernández</div><div class="player-doc">ARG-00287 · Ranking #14</div></div></div></td><td class="date-sm">06/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">10</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#BF360C">RM</div><div><div class="player-name">Rafael Montoya</div><div class="player-doc">COL-00415 · Ranking #21</div></div></div></td><td class="date-sm">07/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">11</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#4E342E">LS</div><div><div class="player-name">Lucas Silva</div><div class="player-doc">URY-00063 · Ranking #29</div></div></div></td><td class="date-sm">08/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+                <tr><td><span class="pos-pill">12</span></td><td><div class="player-cell"><div class="player-avatar" style="background:#5D4037">PR</div><div><div class="player-name">Pablo Rodríguez</div><div class="player-doc">CHI-00332 · Ranking #33</div></div></div></td><td class="date-sm">09/04/2026</td><td><button class="btn-icon-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Add players -->
+      <div class="col-add">
+        <div class="panel">
+          <div class="panel__header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--green-700)"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <div class="panel__title">Agregar Jugadores</div>
+            <div class="panel__spacer"></div>
+            <div class="panel__count" style="background:var(--green-100);color:var(--green-700)">20 disp.</div>
+          </div>
+
+          <div class="add-panel__search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:var(--grey-500);flex-shrink:0"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" placeholder="Buscar jugador disponible…" />
+          </div>
+
+          <div class="add-panel__list">
+
+            <!-- Already added -->
+            <div class="add-player-row already-added">
+              <div class="player-avatar" style="background:#1565C0;width:30px;height:30px;font-size:11px">CN</div>
+              <div class="player-info"><div class="player-name">Carlos Nalbandian</div><div class="player-doc">ARG-00142</div></div>
+              <span class="already-label">Inscripto</span>
+            </div>
+            <div class="add-player-row already-added">
+              <div class="player-avatar" style="background:#0277BD;width:30px;height:30px;font-size:11px">LG</div>
+              <div class="player-info"><div class="player-name">Luisa García</div><div class="player-doc">ESP-00389</div></div>
+              <span class="already-label">Inscripta</span>
+            </div>
+
+            <!-- Available players -->
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#E65100;width:30px;height:30px;font-size:11px">MV</div>
+              <div class="player-info"><div class="player-name">Martín Valdez</div><div class="player-doc">ARG-00510</div></div>
+              <span class="player-ranking">Rk #8</span>
+              <input type="number" class="pos-input" value="13" min="1" max="32" title="Posición en el cuadro" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#1B5E20;width:30px;height:30px;font-size:11px">AA</div>
+              <div class="player-info"><div class="player-name">Andrés Acosta</div><div class="player-doc">MEX-00221</div></div>
+              <span class="player-ranking">Rk #11</span>
+              <input type="number" class="pos-input" value="14" min="1" max="32" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#4A148C;width:30px;height:30px;font-size:11px">EN</div>
+              <div class="player-info"><div class="player-name">Elena Novak</div><div class="player-doc">SRB-00097</div></div>
+              <span class="player-ranking">Rk #15</span>
+              <input type="number" class="pos-input" value="15" min="1" max="32" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#880E4F;width:30px;height:30px;font-size:11px">IC</div>
+              <div class="player-info"><div class="player-name">Isabella Conti</div><div class="player-doc">ITA-00388</div></div>
+              <span class="player-ranking">Rk #17</span>
+              <input type="number" class="pos-input" value="16" min="1" max="32" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#0D47A1;width:30px;height:30px;font-size:11px">FC</div>
+              <div class="player-info"><div class="player-name">Felipe Castillo</div><div class="player-doc">CHI-00178</div></div>
+              <span class="player-ranking">Rk #20</span>
+              <input type="number" class="pos-input" value="17" min="1" max="32" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#33691E;width:30px;height:30px;font-size:11px">SO</div>
+              <div class="player-info"><div class="player-name">Santiago Oliveira</div><div class="player-doc">BRA-00344</div></div>
+              <span class="player-ranking">Rk #22</span>
+              <input type="number" class="pos-input" value="18" min="1" max="32" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#3E2723;width:30px;height:30px;font-size:11px">KT</div>
+              <div class="player-info"><div class="player-name">Kenji Takahashi</div><div class="player-doc">JPN-00156</div></div>
+              <span class="player-ranking">Rk #25</span>
+              <input type="number" class="pos-input" value="19" min="1" max="32" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+            <div class="add-player-row">
+              <div class="player-avatar" style="background:#F57F17;width:30px;height:30px;font-size:11px">VL</div>
+              <div class="player-info"><div class="player-name">Valentina López</div><div class="player-doc">ARG-00601</div></div>
+              <span class="player-ranking">Rk #28</span>
+              <input type="number" class="pos-input" value="20" min="1" max="32" />
+              <button class="btn-add-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            </div>
+
+          </div>
+
+          <div class="add-panel__footer">
+            <div class="selection-summary">
+              Jugadores disponibles para inscribir
+            </div>
+            <button class="btn-add-all">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+              Inscribir Seleccionados
+            </button>
+            <div class="panel__footer-info">Posiciones entre 1 y 32 (tamaño del cuadro)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

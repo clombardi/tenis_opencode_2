@@ -165,3 +165,110 @@ Por favor generá el plan para implementar la funcionalidad recién solicitada, 
 (me presenta un plan sin DELETE, así está en PLAN_FASE1.md)
 
 Por favor, incluí también un DELETE, que verifique que el torneo esté en estado DRAFT
+
+
+-------------------------------------------
+Prompt 11
+-------------------------------------------
+Volviendo al FE, por favor en las validaciones de documentos usadas en frontend/src/components/players/PlayerForm.tsx, permití letras y guiones (dash) además de números, ¡gracias!
+
+
+
+-------------------------------------------
+Prompt 12
+-------------------------------------------
+Hola, te pido que crees la estructura que nos va a ir permitiendo agregar más funcionalidades al FE. 
+En frontend/src/App.tsx, la zona que ahora está ocupada con PlayerManagement, debería depender de la opción elegida en el menú de la izquierda.
+Para esto, usá React Router 7.
+Te pido que implementes los siguientes vínculos entre opciones de menú y componentes:
+- Torneos: un nuevo TournamentManagement en frontend/src/components/tournaments
+- Jugadores: PlayerManagement.
+- Las otras opciones: no vincularlas todavía.
+
+Por favor, empezá por escribir el plan para esta implementación en un archivo en /doc/opencode_plans, todavía no modifiques el código. ¡Gracias!
+
+(genera fe-router-navigation.md)
+
+Por favor, explicame el ítem en el que mencionás "Usar <Outlet>", y explicame cuál es el rol del componente Outlet en una navegación guiada por React Router, ¡gracias!
+
+Por favor, modificá el archivo que generaste recién, agregando una explicación de qué significa "Route index", y si el plan que propusiste contempla el uso de este "Route index", gracias.
+
+Agregale al plan la creación de un placeholder para el dashboard, gracias.
+
+(lo ejecuta, se traba tratando de buildear, tal vez es porque tenía el FE levantado)
+
+
+-------------------------------------------
+Prompt 13
+-------------------------------------------
+Por favor, hacé que los placeholders de torneos y panel general tomen todo el alto de la página, para evitar que el menú de la izquierda quede "cortado", no ocupando todo el alto. ¡Gracias!
+
+
+(en la herramienta de generación de mockups)
+¡Hola! Te pido que crees un componente similar a la lista de jugadores, pero para lista de torneos, más un componente para la edición de los datos de un torneo.
+
+Este es el modelo de torneos
+model Tournament {   id              String           @id @default(uuid())   name            String   categoryId      String   category        TournamentCategory @relation(fields: [categoryId], references: [id])   genderCategory  GenderCategory   mode            TournamentMode   drawSize        Int
+  startDate       DateTime   endDate         DateTime
+  status          TournamentStatus @default(DRAFT)    }
+
+El TournamentCategory tiene un name, que es lo que se muestra en la tabla y por lo que se elige en un select en la edición.
+
+GenderCategory, TournamentMode y TournamentStatus son enums con estas definiciones
+
+enum GenderCategory {
+  MASCULINE
+  FEMININE
+  MIXED
+}
+
+enum TournamentMode {
+  SINGLES
+  DOUBLES
+  MIXED_DOBLES
+}
+
+enum TournamentStatus {
+  DRAFT
+  REGISTRATION
+  ORGANIZING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+La imagen muestra la edición de un jugador, por favor hacé que la de torneo sea análoga. 
+
+¡Gracias!
+
+
+(me armó doc/mockups/tennis-torneos-01.html, lo acomodé a mano generando tennis-torneos.html)
+
+
+
+-------------------------------------------
+Prompt 14
+-------------------------------------------
+Por favor, armá el plan para agregar al frontend la tabla que muestra los torneos, tomando el modelo de doc/mockups/tennis-torneos.html. No incluyas los botones de filtros, sí la búsqueda que es por FE. Los colores de las copas en cada fila van en relación con el género. Reemplazá los tres puntos de la derecha por dos botones "Editar" e "Inscripciones", con el styling del botón "Editar" de la lista de jugadores. Estos botones por ahora no tienen comportamiento.
+
+Esta implementación reemplaza al placeholder en src/components/tournaments/TournamentManagement.tsx, va en el mismo archivo, si hiciera falta crear otros archivos que sea en la misma carpeta.
+
+Por ahora sólo generá el plan y guardalo en doc/opencode_plans, no modifiques código todavía. ¡Gracias!
+
+(generó doc/opencode_plans/tournament-table.md, me gustó, le pedí que lo implemente de una)
+
+
+
+
+-------------------------------------------
+Prompt 15
+-------------------------------------------
+Volviendo a la generación de mockups, vamos a las inscripciones
+
+OK, ahora te pido que generes una lista similar de inscripciones, con torneo, jugador, fecha de inscripción, y posición (un número entre 1 y el tamaño del cuadro), con un modal para agregar una nueva inscripción. La tabla tiene que tener un filtro por torneo. ¡Gracias!
+
+Genera tennis-inscripciones-01.html.
+
+Ahora te pido que generes una versión alternativa, con una pantalla que muestre un torneo con los participantes ya inscriptos y en la misma pantalla, una opción para agregar uno o varios participantes adicionales. ¡Gracias!
+
+Genera tennis-inscripciones-02.html.

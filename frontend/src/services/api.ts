@@ -56,4 +56,55 @@ export const playersApi = {
     api.delete(`/players/${id}`),
 };
 
+export interface Tournament {
+  id: string;
+  name: string;
+  categoryId: string;
+  category: { name: string; code: string };
+  genderCategory: 'MASCULINE' | 'FEMININE' | 'MIXED';
+  mode: 'SINGLES' | 'DOUBLES' | 'MIXED_DOBLES';
+  drawSize: number;
+  startDate: string;
+  endDate: string;
+  status: 'DRAFT' | 'REGISTRATION' | 'ORGANIZING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+}
+
+export interface CreateTournamentDto {
+  name: string;
+  categoryId: string;
+  genderCategory: 'MASCULINE' | 'FEMININE' | 'MIXED';
+  mode: 'SINGLES' | 'DOUBLES' | 'MIXED_DOBLES';
+  drawSize: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface UpdateTournamentDto {
+  name?: string;
+  categoryId?: string;
+  genderCategory?: 'MASCULINE' | 'FEMININE' | 'MIXED';
+  mode?: 'SINGLES' | 'DOUBLES' | 'MIXED_DOBLES';
+  drawSize?: number;
+  startDate?: string;
+  endDate?: string;
+  status?: 'DRAFT' | 'REGISTRATION' | 'ORGANIZING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+}
+
+export const tournamentsApi = {
+  getAll: (params?: { status?: string; genderCategory?: string; mode?: string }) =>
+    api.get<Tournament[]>('/tournaments', { params }),
+
+  getById: (id: string) =>
+    api.get<Tournament>(`/tournaments/${id}`),
+
+  create: (data: CreateTournamentDto) =>
+    api.post<Tournament>('/tournaments', data),
+
+  update: (id: string, data: UpdateTournamentDto) =>
+    api.put<Tournament>(`/tournaments/${id}`, data),
+
+  delete: (id: string) =>
+    api.delete(`/tournaments/${id}`),
+};
+
 export default api;
