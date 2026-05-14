@@ -31,3 +31,11 @@
 | PATCH | /tournaments/:id/open-registration | Abrir inscripciones (DRAFT → REGISTRATION) |
 | PATCH | /tournaments/:id/start | Iniciar tournament (ORGANIZING → IN_PROGRESS) |
 | PATCH | /tournaments/:id/status | Cambiar estado |
+
+## Registration
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | /registrations | Inscribir jugadores a un torneo |
+| GET | /registrations | Listar inscripciones |
+| GET | /registrations/tournament/:tournamentId | Ver inscripción por torneo |
