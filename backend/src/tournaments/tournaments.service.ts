@@ -61,6 +61,7 @@ export class TournamentsService {
     if (query.categoryId) where.categoryId = query.categoryId;
 
     return this.prisma.tournament.findMany({
+      relationLoadStrategy: 'join',
       where,
       include: { category: true },
       orderBy: { createdAt: 'desc' },

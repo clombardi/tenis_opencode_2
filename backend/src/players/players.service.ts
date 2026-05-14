@@ -136,7 +136,7 @@ export class PlayersService {
     for (let i = 0; i < count; i++) {
       const gender = i < count / 2 ? PlayerGender.MALE : PlayerGender.FEMALE;
       const firstName = firstNames[gender][i % firstNames[gender].length];
-      const lastName = lastNames[i % lastNames.length];
+      const lastName = lastNames[(i + 1) % lastNames.length];
       const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`;
 
       const player = await this.prisma.player.create({

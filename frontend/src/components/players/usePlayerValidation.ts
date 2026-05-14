@@ -96,7 +96,7 @@ export function usePlayerValidation(): UsePlayerValidationReturn {
   }, []);
 
   const errorTextToShow = useCallback((field: ValidatableField): string | undefined => {
-    const showError = touched.has(field) || submitted;
+    const showError = touched.has(field);
     return showError ? errors[field] : undefined;
   }, [errors, touched, submitted]);
 
