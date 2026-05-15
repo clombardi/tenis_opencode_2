@@ -78,7 +78,15 @@ export class TournamentsService {
       throw new NotFoundException('Tournament not found');
     }
 
-    return tournament;
+    const registration = await this.prisma.registration.findUnique({
+      where: { tournamentId: id },
+      include: { participants: { include: { player: true } } },
+    });
+
+    return {
+      ...tournament,
+      participants: registration?.participants || [],
+    };
   }
 
   async update(id: string, dto: UpdateTournamentDto) {
